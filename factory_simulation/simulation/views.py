@@ -39,6 +39,9 @@ def logout_view(request):
 @user_passes_test(is_player,"home",redirect_field_name=None)
 def shop(request):
     """Shop page view"""
+    if request.method == "POST":
+        if "purchase" in request.POST:
+            print(request.POST)
     try:
         response = requests.get(f"{url}/get_upgrades?id=0")
         data = json.loads(response.text)
