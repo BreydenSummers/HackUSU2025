@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Team, Product
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.http import JsonResponse
 import requests, json
 import os
 
@@ -25,7 +26,9 @@ def check_teams():
     try:
         response = requests.get(f"{url}/get_teams")
         flask_teams = json.loads(response.text)
+        flask_teams = flask_teams['teams']
         for t in teams:
+            print(t.name)
             if t.name not in flask_teams:
                 try:
                     response = requests.get(f"{url}/add_team?team_id={t.name}")
@@ -93,7 +96,8 @@ def get_cycle(request):
     team = get_team_by_user(request.user)
     try:
         res = requests.get(f"{url}/get_factory_state?team_id={team.name}")
-        return res.text
+        data = json.loads(res.text)
+        return JsonResponse(data)
     except Exception as e:
         print(e)
     return ""

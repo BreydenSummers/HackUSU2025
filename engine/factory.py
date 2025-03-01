@@ -3,7 +3,6 @@ import datetime
 import random
 import time
 from upgrades import upgrades
-from pprint import pprint
 
 
 UPDATE_INTERVAL = 5
@@ -83,7 +82,7 @@ class Factory:
 
         self.upgrades = upgrades
         self.messages = [
-            Message("Admin", "Test Email", "Great job, you learned how to check your email! Make sure you come back here often to check for important updates!")
+            Message("Admin", "Welcome!", "Great job, you learned how to check your email. Make sure you come back here often to check for important updates!")
         ]
 
     def update_factory(self):
@@ -108,7 +107,7 @@ class Factory:
                         self.attacks.append(step.nerf.id)
                 elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message:
                     self.messages.append(step.nerf.message)
-            print(subtotal)
+                    step.nerf = Nerf()
             self.money += subtotal
             self.money = int(self.money)
 
@@ -126,6 +125,7 @@ class Factory:
         return True
 
     def get_state_json(self):
+        self.update_factory()
         return json.dumps({
             "id" : self.id,
             "money" : int(self.money),
@@ -175,12 +175,12 @@ class Attack:
 
 attack_list = {
     "attacks" : [
-        Attack(0, "purchasing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(1, "manufacturing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(2, "assembly", Nerf(random.randint(10000, 99999), 0, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(3, "packing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(4, "warehouse", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(5, "shipping", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network.")))
+        Attack(0, "purchasing", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(1, "manufacturing", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(2, "assembly", Nerf(random.randint(10000, 99999), 0, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(3, "packing", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(4, "warehouse", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(5, "shipping", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network.")))
     ]
 }
 if __name__ == "__main__":
