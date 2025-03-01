@@ -21,7 +21,7 @@ def get_team_by_user(user):
     for t in teams:
         if user in t.members.all():
             return t
-        
+
 def check_teams():
     teams = Team.objects.all()
     try:
@@ -37,9 +37,8 @@ def check_teams():
     except Exception as e:
         print(e)
 
-def index(request):
-    """index page view"""
-    return render(request, "simulation/index.html")
+def home(request):
+    return render(request, "simulation/home.html")
 
 
 def login_page(request):
@@ -57,6 +56,12 @@ def login_page(request):
 def logout_view(request):
     logout(request)
     return redirect("home")
+
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_player,"home",redirect_field_name=None)
+def index(request):
+    """index page view"""
+    return render(request, "simulation/index.html")
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_player,"home",redirect_field_name=None)
@@ -114,13 +119,12 @@ def start_game(request):
 
 
         wazuh_pass = f"tempP@ssw0rd_{t.name}"
-        body = f"""A Wazuh instance has been created for your team.You can access it at: <a href="https://localhost:{t.port}">https://localhost:{t.port}</a>.
+        body = f"""A Wazuh instance has been created for your team.You can access it at: https://localhost:{t.port}.
         The username is: user. Use the following password: {wazuh_pass}"""
         headers = {'Content-Type': 'application/json'}
         res = os.popen("curl -X POST http://localhost:6000/deploy   -H 'Content-Type: application/json' -d '{\"port\":"+str(t.port)+", \"password\": \""+wazuh_pass+"\"}'").read()
         #res = requests.post(f"http://localhost:6000/deploy",data={"port":wazuh_port,"password":wazuh_pass},headers=headers)
         res = requests.get(f"{url}/send_message?team_id={t.name}&sender=Admin&subject=Wazuh Access&body={body}")
-        wazuh_port+=100
     
     return redirect("admin_dashboard")
 
