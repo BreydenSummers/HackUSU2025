@@ -2,6 +2,8 @@ import json
 import datetime
 import random
 import time
+from upgrades import upgrades
+from attacks import attacks
 
 
 UPDATE_INTERVAL = 1
@@ -10,6 +12,22 @@ RANDOMNESS_COEFFICIENT = 0.02
 
 def random_offset():
     return ((random.random() - 0.5) * RANDOMNESS_COEFFICIENT) + 1
+
+
+class Message:
+    def __init__(self, sender, subject, body):
+        self.timestamp = str(datetime.datetime.now()).split(".")[0]
+        self.sender = sender
+        self.subject = subject
+        self.body = body
+
+    def get_dict(self):
+        return {
+            "timestamp" : self.timestamp,
+            "sender" : self.sender,
+            "subject" : self.subject,
+            "body" : self.body
+        }
 
 
 class Nerf:
@@ -62,6 +80,11 @@ class Factory:
 
         self.attacks = []
 
+        self.upgrades = upgrades
+        self.messages = [
+            Message("Admin", "Test Email", "Great job, you learned how to check your email! Make sure you come back here often to check for important updates!")
+        ]
+
     def update_factory(self):
         time = datetime.datetime.now()                  # Gets the time right now
         time_delta = (time - self.start_time).seconds   # Delta time in seconds
@@ -84,8 +107,16 @@ class Factory:
                         self.attacks.append(step.nerf.id)
             print(subtotal)
             self.money += subtotal
+            self.money = int(self.money)
 
-
+    def purchase_upgrade(self, category, id):
+        upgrade = self.upgrades[category][id]
+        if self.money < upgrade.cost:
+            return False
+        if category == "production":
+            self.processes[upgrade.process].multiplier = upgrade.effect(self.processes[upgrade.process].multiplier)
+            upgrade.cost = int(upgrade.scale(upgrade.cost))
+        return True
 
     def get_state_json(self):
         return json.dumps({
@@ -95,6 +126,26 @@ class Factory:
             "attacks" : self.attacks
         })
     
+    def get_upgrades_json(self):
+        return json.dumps({
+            "production" : [upgrade.get_dict() for upgrade in self.upgrades["production"]],
+            "defense" : [upgrade.get_dict() for upgrade in self.upgrades["defense"]]
+        })
+    
+    def get_messages_json(self):
+        return json.dumps({
+            "messages" : [message.get_dict() for message in self.messages]
+        })
+    
+    def send_message(self, sender, subject, body):
+        message = Message(sender, subject, body)
+        self.messages.append(message)
+        return True
+    
+    def attack(self, attack):
+        pass
+
+
 
 if __name__ == "__main__":
     test_factory = Factory("test", datetime.datetime.now())
