@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Team, Product
+from django.contrib.auth import authenticate, login, logout
 
 
 def is_admin(user):
@@ -18,6 +19,26 @@ def shop(request):
     products = Product.objects.all()
     return render(request, "simulation/shop.html", {"products": products})
 
+def login_page(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            print(user)
+            if user.is_staff:
+                return redirect("admin_dashboard")
+            return redirect("home")
+    return render(request, "simulation/login.html")
+
+def logout_view(request):
+    logout(request)
+    return redirect("home")
+
+@login_required
+def messages_dashboard(request):
+    return render(request, "simulation/messages.html")
 
 @login_required
 @user_passes_test(is_admin)
