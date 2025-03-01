@@ -88,6 +88,15 @@ class Factory:
             print(subtotal)
             self.money += subtotal
 
+    def purchase_upgrade(self, category, id):
+        upgrade = self.upgrades[category][id]
+        if self.money < upgrade.cost:
+            return False
+        if category == "production":
+            self.processes[upgrade.process].multiplier = upgrade.effect(self.processes[upgrade.process].multiplier)
+            upgrade.cost = upgrade.scale(upgrade.cost)
+        return True
+
     def get_state_json(self):
         return json.dumps({
             "id" : self.id,

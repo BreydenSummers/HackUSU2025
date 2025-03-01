@@ -13,12 +13,21 @@ def get_factory_state():
     factory = factories[factory_id]
     return factory.get_state_json()
 
-
 @app.route("/get_upgrades", methods=["GET"])  
 def get_upgrades():
     factory_id = int(request.args.get("id"))
     factory = factories[factory_id]
     return factory.get_upgrades_json()
+
+@app.route("/purchase_upgrade", methods=["GET"])  
+def purchase_upgrade():
+    factory_id = int(request.args.get("factory_id"))
+    category = request.args.get("category")
+    upgrade_id = int(request.args.get("upgrade_id"))
+    factory = factories[factory_id]
+    result = factory.purchase_upgrade(category, upgrade_id)
+    return json.dumps({ "result" : result })
+
 
 
 start_time = datetime.datetime.now()
@@ -26,6 +35,7 @@ factories = [
         Factory("factory_0", start_time),
         Factory("factory_1", start_time)
     ]
+
 
 
 def main():

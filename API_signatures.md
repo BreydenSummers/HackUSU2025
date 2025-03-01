@@ -48,3 +48,14 @@ GET http://[IP]:5000/get_upgrades?id=0
    ]
 }
 ```
+
+### Purchase Upgrade
+
+#### Call Signiture
+```
+GET http://[IP]:5000/purchase_upgrade?factory_id=0&category=production&upgrade_id=0
+```
+#### Return json Format
+```json
+{ "success" : true }
+```
