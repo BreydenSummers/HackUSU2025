@@ -8,6 +8,7 @@ import requests, json
 import os
 
 url = "http://127.0.0.1:5000"
+wazuh_port=5601
 
 def is_admin(user):
     return user.is_staff or user.is_superuser
@@ -106,7 +107,6 @@ def get_cycle(request):
 def start_game(request):
     check_teams()
     teams = Team.objects.all()
-    wazuh_port = 5601
     for t in teams:
         for u in t.members.all():
             u.is_active = True
@@ -114,13 +114,13 @@ def start_game(request):
 
 
         wazuh_pass = f"tempP@ssw0rd_{t.name}"
-        body = f"""A Wazuh instance has been created for your team.You can access it at: https://localhost:{wazuh_port}.
-        Use the following password: {wazuh_pass}"""
+        body = f"""A Wazuh instance has been created for your team.You can access it at: <a href="https://localhost:{t.port}">https://localhost:{t.port}</a>.
+        The username is: user. Use the following password: {wazuh_pass}"""
         headers = {'Content-Type': 'application/json'}
-        res = os.popen("curl -X POST http://localhost:6000/deploy   -H 'Content-Type: application/json' -d '{\"port\":"+str(wazuh_port)+", \"password\": \""+wazuh_pass+"\"}'").read()
+        res = os.popen("curl -X POST http://localhost:6000/deploy   -H 'Content-Type: application/json' -d '{\"port\":"+str(t.port)+", \"password\": \""+wazuh_pass+"\"}'").read()
         #res = requests.post(f"http://localhost:6000/deploy",data={"port":wazuh_port,"password":wazuh_pass},headers=headers)
         res = requests.get(f"{url}/send_message?team_id={t.name}&sender=Admin&subject=Wazuh Access&body={body}")
-        wazuh_port+=1
+        wazuh_port+=100
     
     return redirect("admin_dashboard")
 
@@ -192,6 +192,7 @@ def send_message(request):
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
 def create_team(request):
+    global wazuh_port
     check_teams()
     """View for admin to create a team"""
     if request.method == "POST":
@@ -202,8 +203,9 @@ def create_team(request):
             response = requests.get(f"{url}/add_team?team_id={name}")
         except Exception as e:
             print(e)
-        team = Team(name=name, description=description, created_by=request.user)
+        team = Team(name=name, description=description, created_by=request.user, port=wazuh_port)
         team.save()
+        wazuh_port+=100
 
         messages.success(request, f"Team '{name}' created successfully!")
         return redirect("admin_dashboard")

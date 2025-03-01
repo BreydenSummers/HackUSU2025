@@ -7,6 +7,7 @@ class Team(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    port = models.IntegerField()
 
     # Admin user who created the team
     created_by = models.ForeignKey(
