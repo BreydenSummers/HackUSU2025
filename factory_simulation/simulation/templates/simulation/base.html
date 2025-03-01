@@ -55,6 +55,7 @@
           >
             <li><a href="{% url 'home' %}">Home</a></li>
             {% if user.is_authenticated and not user.is_staff %}
+            <li><a href="{% url 'index' %}">Dashboard</a></li>
             <li><a href="{% url 'shop' %}">Shop</a></li>
             <li><a href="{% url 'messages' %}">Messages</a></li>
             {% endif %}
@@ -70,6 +71,7 @@
       <div class="navbar-center hidden lg:flex">
         <ul class="menu menu-horizontal px-1">
           {% if user.is_authenticated and not user.is_staff %}
+          <li><a href="{% url 'index' %}">Dashboard</a></li>
           <li><a href="{% url 'shop' %}">Shop</a></li>
           <li><a href="{% url 'messages' %}">Messages</a></li>
           {% endif %}
