@@ -3,6 +3,7 @@ import datetime
 import random
 import time
 from upgrades import upgrades
+from attacks import attacks
 
 
 UPDATE_INTERVAL = 1
@@ -140,6 +141,9 @@ class Factory:
         message = Message(sender, subject, body)
         self.messages.append(message)
         return True
+    
+    def attack(self, attack):
+        pass
 
 
 
