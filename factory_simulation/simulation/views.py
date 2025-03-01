@@ -49,10 +49,19 @@ def messages_dashboard(request):
 @user_passes_test(is_admin)
 def admin_dashboard(request):
     """Admin dashboard view (for non-Django admin)"""
+    if request.method == "POST":
+        try:
+            if "team-delete" in request.POST:
+                to_delete = Team.objects.get(name=request.POST['team'])
+                to_delete.delete()
+            if "user-delete" in request.POST:
+                to_delete = get_user_model().objects.get(username=request.POST['username'])
+                to_delete.delete()
+        except Exception as e:
+            print(e)
     teams = Team.objects.filter(created_by=request.user)
     User = get_user_model()
     users = [u for u in User.objects.all() if not u.is_superuser and not u.is_staff]
-    print(teams[0].members.all()[0].username)
     return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users})
 
 

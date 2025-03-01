@@ -32,8 +32,12 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
             <td>{{ team.members.count }}</td>
             <td>
               <div class="flex space-x-2">
-                <button class="btn btn-sm btn-primary">Edit</button>
-                <button class="btn btn-sm btn-error">Delete</button>
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="team" value="{{ team.name }}"/>
+                  <button type="submit" name="team-edit" class="btn btn-sm btn-primary">Edit</button>
+                  <button type="submit" name="team-delete" class="btn btn-sm btn-error">Delete</button>
+                </form>
               </div>
             </td>
           </tr>
@@ -87,8 +91,12 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
               <td>{{ team.name }}</td>
               <td>
                 <div class="flex space-x-2">
-                  <button class="btn btn-sm btn-primary">Edit</button>
-                  <button class="btn btn-sm btn-error">Delete</button>
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="username" value="{{ player.username }}"/>
+                    <button name="user-edit" type="submit" class="btn btn-sm btn-primary">Edit</button>
+                    <button name="user-delete" type="submit" class="btn btn-sm btn-error">Delete</button>
+                  </form>
                 </div>
               </td>
             </tr>
