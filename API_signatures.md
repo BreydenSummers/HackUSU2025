@@ -59,3 +59,27 @@ GET http://[IP]:5000/purchase_upgrade?factory_id=0&category=production&upgrade_i
 ```json
 { "success" : true }
 ```
+
+### Get Messages
+
+#### Call Signiture
+```
+GET http://[IP]:5000/get_messages?id
+```
+#### Return json Format
+```json
+{
+   "messages" : [
+      {
+         "timestamp":"[DATETIME]",
+         "subject":"[SUBJECT]",
+         "body":"[BODY]"
+      },
+      {
+         "timestamp":"[DATETIME]",
+         "subject":"[SUBJECT]",
+         "body":"[BODY]"
+      }
+   ]
+}
+```

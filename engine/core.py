@@ -28,6 +28,11 @@ def purchase_upgrade():
     result = factory.purchase_upgrade(category, upgrade_id)
     return json.dumps({ "result" : result })
 
+@app.route("/get_messages", methods=["GET"])
+def get_messages():
+    factory_id = int(request.args.get("id"))
+    factory = factories[factory_id]
+    return factory.get_messages_json()
 
 
 start_time = datetime.datetime.now()
