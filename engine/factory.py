@@ -23,6 +23,7 @@ class Message:
     def get_dict(self):
         return {
             "timestamp" : self.timestamp,
+            "sender" : self.sender,
             "subject" : self.subject,
             "body" : self.body
         }
