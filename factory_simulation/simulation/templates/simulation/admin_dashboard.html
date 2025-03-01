@@ -3,6 +3,9 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
 <div class="flex justify-between items-center mb-6">
   <h1 class="text-3xl font-bold">Admin Dashboard</h1>
   <a href="{% url 'create_team' %}" class="btn btn-success">Create New Team</a>
+  <a href="{% url 'add_user' %}" class="btn btn-success">Create New User</a>
+  <a href="{% url 'create_team' %}" class="btn btn-success">Start Game</a>
+  <a href="{% url 'create_team' %}" class="btn btn-success">End Game</a>
 </div>
 
 <div class="card bg-base-200 shadow-xl mb-8">
@@ -29,8 +32,12 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
             <td>{{ team.members.count }}</td>
             <td>
               <div class="flex space-x-2">
-                <button class="btn btn-sm btn-primary">Edit</button>
-                <button class="btn btn-sm btn-error">Delete</button>
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="team" value="{{ team.name }}"/>
+                  <button type="submit" name="team-edit" class="btn btn-sm btn-primary">Edit</button>
+                  <button type="submit" name="team-delete" class="btn btn-sm btn-error">Delete</button>
+                </form>
               </div>
             </td>
           </tr>
@@ -54,6 +61,144 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
         ></path>
       </svg>
       <span>You haven't created any teams yet.</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card bg-base-200 shadow-xl mb-8">
+  <div class="card-body">
+    <h2 class="card-title text-2xl mb-4">Players</h2>
+    {% if players %}
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Team</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for team in teams %}
+            {% for player in team.members.all %}
+            <tr>
+              <td>{{ player.username }}</td>
+              <td>{{ player.first_name }}</td>
+              <td>{{ player.last_name }}</td>
+              <td>{{ team.name }}</td>
+              <td>
+                <div class="flex space-x-2">
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="username" value="{{ player.username }}"/>
+                    <button name="user-edit" type="submit" class="btn btn-sm btn-primary">Edit</button>
+                    <button name="user-delete" type="submit" class="btn btn-sm btn-error">Delete</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="stroke-current shrink-0 w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+      <span>You haven't created any users yet.</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card bg-base-200 shadow-xl mb-8">
+  <div class="card-body">
+    <h2 class="card-title text-2xl mb-4">Messaging</h2>
+    {% if teams %}
+    <div class="overflow-x-auto">
+      <form method="post" action="send-message">
+        <input class="p-2" type="text" name="title" placeholder="Message title"/>
+        <input class="p-2" type="text" name="text" placeholder="Message text"/>
+        <label>
+          Send to:
+        </label>
+        <select>
+          <option value="all">All teams</option>
+          {% for team in teams %}
+          <option value="{{ team.name }}">{{ team.name }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="stroke-current shrink-0 w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+      <span>There are no teams, you cannot send messages.</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card bg-base-200 shadow-xl mb-8">
+  <div class="card-body">
+    <h2 class="card-title text-2xl mb-4">Attacks</h2>
+    {% if teams %}
+    <div class="overflow-x-auto">
+      <form method="post" action="send-message">
+        <label>
+          Send to:
+        </label>
+        <select>
+          <option value="all">All teams</option>
+          {% for team in teams %}
+          <option value="{{ team.name }}">{{ team.name }}</option>
+          {% endfor %}
+        </select>
+      </form>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="stroke-current shrink-0 w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+      <span>There are no teams, you cannot send attacks.</span>
     </div>
     {% endif %}
   </div>

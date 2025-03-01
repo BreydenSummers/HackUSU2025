@@ -8,5 +8,6 @@ urlpatterns = [
     path("create-team/", views.create_team, name="create_team"),
     path("messages/",views.messages_dashboard, name="messages"),
     path("login/", views.login_page, name="login"),
-    path("logout/", views.logout_view, name="logout")
+    path("logout/", views.logout_view, name="logout"),
+    path("add-user/", views.add_user, name="add_user")
 ]
