@@ -101,8 +101,10 @@ class Factory:
             random.seed(self.total_updates)
             subtotal = self.base_income
             for key, step in self.processes.items():    # Iterates through every process and applies the multiplier with a small random coefficient
+                step.stats = 1
                 subtotal *= (step.get_multiplier() * random_offset())
                 if step.nerf.delay == 0 and not step.nerf.duration == 0:
+                    step.stats = 0
                     if not step.nerf.id in self.attacks:
                         self.attacks.append(step.nerf.id)
                 elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message:
