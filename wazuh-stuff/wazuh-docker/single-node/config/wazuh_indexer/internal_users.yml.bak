@@ -56,7 +56,7 @@ snapshotrestore:
   description: "Demo snapshotrestore user"
 
 user:
-  hash: "$2b$12$Nd82QSHDLcNlKbXl0eH/.OjicsiaNrfaTGWf.OGCt.LzX.vfv2ga."
+  hash: "$2b$12$E8H6wgECKXnz5f5dxeW8m.IapGdAfD8TUZGqFxEJfG/6tZCxSNhrO"
   reserved: false
   backend_roles:
   - "admin"
