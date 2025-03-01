@@ -87,6 +87,18 @@ def messages_dashboard(request):
     return render(request, "simulation/messages.html", {"emails":messages})
 
 @login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_player,"home",redirect_field_name=None)
+def get_cycle(request):
+    check_teams()
+    team = get_team_by_user(request.user)
+    try:
+        res = requests.get(f"{url}/get_factory_state?team_id={team.name}")
+        return res.text
+    except Exception as e:
+        print(e)
+    return ""
+
+@login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
 def start_game(request):
     check_teams()
@@ -150,7 +162,6 @@ def send_attack(request):
             targets = [t.name for t in Team.objects.all()]
         else:
             targets = [target]
-        print(id,targets)
         for t in targets:
             try:
                 res = requests.get(f"{url}/send_attack?team_id={t}&attack_index={id}")

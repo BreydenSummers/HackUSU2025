@@ -14,4 +14,5 @@ urlpatterns = [
     path("start_game/", views.start_game, name="start_game"),
     path("end_game/", views.end_game, name="end_game"),
     path("send_attack/", views.send_attack, name="send_attack"),
+    path("get-cycle/", views.get_cycle, name="get-cycle"),
 ]
