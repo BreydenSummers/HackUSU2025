@@ -6,7 +6,7 @@
 
 #### Call Signature
 ```
-GET http://[IP]:5000/add_team?team_id=team_1
+GET http://[IP]:5000/add_team?team_id=team_1&port=6105
 ```
 #### Return json Format
 ```json

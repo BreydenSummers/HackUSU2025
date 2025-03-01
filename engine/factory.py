@@ -3,6 +3,7 @@ import datetime
 import random
 import time
 from upgrades import upgrades
+import attack
 
 
 UPDATE_INTERVAL = 5
@@ -36,6 +37,7 @@ class Nerf:
         self.effect = effect
         self.id = id
         self.message = message
+        self.attack_id = None
 
 
 class Process:
@@ -59,9 +61,17 @@ class Process:
     def __str__(self):
         return str(self.stats)
 
+attack_map = {
+    "purchasing" : "brute_force",
+    "manufacturing" : "malware_activity",
+    "assembly" : "ddos_attack",
+    "packing" : "data_exfiltration",
+    "warehouse" : "privilege_escalation",
+    "shipping" : "insider_threat"
+}
 
 class Factory:
-    def __init__(self, id, start_time):
+    def __init__(self, id, start_time, wazuh_port):
         self.start_time = start_time
         self.total_updates = 0
 
@@ -85,6 +95,8 @@ class Factory:
             Message("Admin", "Welcome!", "Great job, you learned how to check your email. Make sure you come back here often to check for important updates!")
         ]
 
+        self.simulator = attack.FactoryAttackSimulator(host='localhost', port=wazuh_port)
+
     def update_factory(self):
         time = datetime.datetime.now()                  # Gets the time right now
         time_delta = (time - self.start_time).seconds   # Delta time in seconds
@@ -105,9 +117,11 @@ class Factory:
                 subtotal *= (step.get_multiplier() * random_offset())
                 if step.nerf.delay == 0 and not step.nerf.duration == 0:
                     step.stats = 0
-                    if not step.nerf.id in self.attacks:
+                    if not step.nerf.id in self.attacks: # Attack starts
+                        step.nerf.attack_id = self.simulator.start_attack(attack_map[key], section=key)
                         self.attacks.append(step.nerf.id)
-                elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message:
+                elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message: # Attack ends
+                    self.simulator.stop_attack(step.nerf.attack_id)
                     self.messages.append(step.nerf.message)
                     step.nerf = Nerf()
             self.money += subtotal
