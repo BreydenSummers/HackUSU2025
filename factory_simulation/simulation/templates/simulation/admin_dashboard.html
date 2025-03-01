@@ -4,8 +4,8 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
   <h1 class="text-3xl font-bold">Admin Dashboard</h1>
   <a href="{% url 'create_team' %}" class="btn btn-success">Create New Team</a>
   <a href="{% url 'add_user' %}" class="btn btn-success">Create New User</a>
-  <a href="{% url 'create_team' %}" class="btn btn-success">Start Game</a>
-  <a href="{% url 'create_team' %}" class="btn btn-success">End Game</a>
+  <a href="{% url 'start_game' %}" class="btn btn-success">Start Game</a>
+  <a href="{% url 'end_game' %}" class="btn btn-success">End Game</a>
 </div>
 
 <div class="card bg-base-200 shadow-xl mb-8">
@@ -177,12 +177,13 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
         <label>
           Send to:
         </label>
-        <select>
+        <select name="target" class="input">
           <option value="all">All teams</option>
           {% for team in teams %}
           <option value="{{ team.name }}">{{ team.name }}</option>
           {% endfor %}
         </select>
+        <button type="submit" class="btn btn-primary">Attack</button>
       </form>
     </div>
     {% else %}

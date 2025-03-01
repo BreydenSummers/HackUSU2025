@@ -88,6 +88,16 @@ def messages_dashboard(request):
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
+def start_game(request):
+    None
+
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
+def end_game(request):
+    None
+
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
 def admin_dashboard(request):
     """Admin dashboard view (for non-Django admin)"""
     check_teams()
