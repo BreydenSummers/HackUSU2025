@@ -4,9 +4,12 @@ Arbitrage{% endblock %} {% block content %}
   <div class="hero-content text-center">
     <div class="flex flex-col items-center">
 
+      <canvas id="chart-canvas" width="1000" height="500" class="border rounded-box w-full max-w-[1000px] bg-gray-100"></canvas>
+
+      <div class="p-4"></div>
       <div class="border rounded-box w-full h-[50vw] relative">
         <div class="absolute px-8 py-2 border-r border-b rounded-br-xl">
-          Factory Live Cam
+          Square Inc. Factory Live Cam
           <span class="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full animate-ping [animation-duration:2s]"
             style="animation-duration:2s"></span>
         </div>
@@ -16,24 +19,90 @@ Arbitrage{% endblock %} {% block content %}
   </div>
 </div>
 
-
 <script>
-  let cycleData = null;
+  let chartCanvas = document.getElementById("chart-canvas");
+  let chartContext = chartCanvas.getContext("2d");
+  chartContext.imageSmoothingEnabled = false;
 
-  setInterval(() => {
+  let cycleChartData = [];
+
+  function getCycleChartData () {
     fetch("{% url 'get-cycle' %}")
       .then((response) => {
         console.log(response);
         return response.json();
       }
       ).then((data) => {
+        console.log(data);
+        cycleChartData.push(data.money);
+        chartContext.clearRect(0,0,chartCanvas.width,chartCanvas.height); 
+        let i = 50;
+        let maxVal = Math.max(...cycleChartData)
+        let firstDone = false;
+        cycleChartData.forEach((value)=>{
+          yVal = 500 - (400 * value / maxVal);
+          if (!firstDone) {
+            chartContext.moveTo(i,yVal);
+            firstDone = true;
+          } else {
+            chartContext.lineTo(i,yVal);
+          }
+          console.log(i, yVal);
+          i += 900 / (cycleChartData.length - 1);
+        })
+        
+        chartContext.stroke();
+      }).catch((error)=> {
+        console.log(error);
+      }
+      );
+  }
+
+  getCycleChartData();
+
+  setInterval(getCycleChartData, 5000);
+
+  function resizeChartCanvas() {
+    chartCanvas.width = window.innerWidth;
+    chartCanvas.height = window.innerWidth / 2;
+  }
+
+  window.addEventListener('load', resizeChartCanvas);
+  window.addEventListener('resize', resizeChartCanvas);
+
+
+</script>
+
+<script>
+  let cycleData = null;
+
+  function getCycleData () {
+    fetch("{% url 'get-cycle' %}")
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      }
+      ).then((data) => {
+        console.log(data);
         cycleData = data;
+        cycleData = [
+          parseFloat(data.processes.purchasing),
+          parseFloat(data.processes.manufacturing),
+          parseFloat(data.processes.assembly),
+          parseFloat(data.processes.packing),
+          parseFloat(data.processes.warehouse),
+          parseFloat(data.processes.shipping),
+        ];
         console.log(cycleData);
       }).catch((error)=> {
         console.log(error);
       }
       );
-  }, 5000);
+  }
+
+  getCycleData();
+
+  setInterval(getCycleData, 5000);
 
   function resizeCanvas() {
     canvas.width = window.innerWidth;
@@ -95,6 +164,19 @@ Arbitrage{% endblock %} {% block content %}
     ]
   );
 
+  let xMarkAnimation = loadAnimation(
+    [
+      "{% static 'images/x-mark.svg' %}",
+    ]
+  );
+
+  let checkMarkAnimation = loadAnimation(
+    [
+      "{% static 'images/check-mark1.svg' %}",
+      "{% static 'images/check-mark2.svg' %}",
+    ]
+  );
+
   let canvas = document.getElementById("game-canvas");
   let context = canvas.getContext("2d");
   context.imageSmoothingEnabled = false;
@@ -147,6 +229,17 @@ Arbitrage{% endblock %} {% block content %}
         return;
       }
       context.drawImage(animation[framePosition % animation.length], i, 200, size, size);
+      i += step;
+    })
+    i = 50;
+    step = 120;
+    size = 40;
+    cycleData.forEach((value) => {
+      let animation = value >= 1 ? checkMarkAnimation : xMarkAnimation;
+      if (!animation[framePosition % animation.length].complete) {
+        return;
+      }
+      context.drawImage(animation[framePosition % animation.length], i, 100, size, size);
       i += step;
     })
   }
