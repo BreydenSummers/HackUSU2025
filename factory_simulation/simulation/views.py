@@ -200,7 +200,7 @@ def create_team(request):
         name = request.POST.get("name")
         description = request.POST.get("description")
         try:
-            response = requests.get(f"{url}/add_team?team_id={name}")
+            response = requests.get(f"{url}/add_team?team_id={name}&port={wazuh_port}")
         except Exception as e:
             print(e)
         team = Team(name=name, description=description, created_by=request.user, port=wazuh_port)
