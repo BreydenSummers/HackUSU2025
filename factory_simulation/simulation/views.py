@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Team, Product
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 
 
 def is_admin(user):
@@ -50,7 +50,10 @@ def messages_dashboard(request):
 def admin_dashboard(request):
     """Admin dashboard view (for non-Django admin)"""
     teams = Team.objects.filter(created_by=request.user)
-    return render(request, "simulation/admin_dashboard.html", {"teams": teams})
+    User = get_user_model()
+    users = [u for u in User.objects.all() if not u.is_superuser and not u.is_staff]
+    print(teams[0].members.all()[0].username)
+    return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users})
 
 
 @login_required(redirect_field_name=None,login_url="login")
@@ -70,3 +73,22 @@ def create_team(request):
 
     return render(request, "simulation/create_team.html")
 
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
+def add_user(request):
+    teams = Team.objects.filter(created_by=request.user)
+    if request.method == "POST":
+        username = request.POST.get("username")
+        firstname = request.POST.get("firstname")
+        lastname = request.POST.get("lastname")
+        password = request.POST.get("password")
+        user = get_user_model().objects.create_user(username=username,
+                                                    password=password,
+                                                    first_name=firstname,
+                                                    last_name=lastname)
+        team = request.POST.get("team")
+        for t in teams:
+            if t.name == team:
+                t.members.add(user)
+        return redirect("admin_dashboard")
+    return render(request, "simulation/add_user.html",{"teams": teams})
