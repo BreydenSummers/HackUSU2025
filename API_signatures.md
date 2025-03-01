@@ -13,6 +13,17 @@ GET http://[IP]:5000/add_team?team_id=team_1
 { "success" : true }
 ```
 
+### Get Teams
+
+#### Call Signature
+```
+GET http://[IP]:5000/get_teams
+```
+#### Return json Format
+```json
+{ "teams" : ["team_1", "team_2"] }
+```
+
 ### Get Factory State
 
 #### Call Signature

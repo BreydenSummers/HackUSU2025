@@ -15,6 +15,12 @@ def add_team():
     factories[team_name] = Factory(team_name, start_time)
     return json.dumps({ "result" : True })
 
+@app.route("/get_teams", methods=["GET"])
+def get_teams():
+    return json.dumps({
+        "teams" : [factories[key].id for key in factories]
+    })
+
 @app.route("/get_factory_state", methods=["GET"])  
 def get_factory_state():
     factory_id = request.args.get("team_id")
