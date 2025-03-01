@@ -89,7 +89,24 @@ def messages_dashboard(request):
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
 def start_game(request):
-    None
+    check_teams()
+    teams = Team.objects.all()
+    wazuh_port = 5601
+    for t in teams:
+        for u in t.members.all():
+            u.is_active = True
+            u.save()
+
+
+        wazuh_pass = f"tempP@ssw0rd_{t.name}"
+        body = f"""A Wazuh instance has been created for your team.You can access it at: https://localhost:{wazuh_port}.
+        Use the following password: {wazuh_pass}"""
+
+        #res = requests.post(f"http://localhost:6000/deploy",data={"port":wazuh_port,"password":wazuh_pass})
+        res = requests.get(f"{url}/send_message?team_id={t.name}&sender=Admin&subject=Wazuh Access&body={body}")
+        wazuh_port+=1
+    
+    return redirect("admin_dashboard")
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
@@ -167,7 +184,8 @@ def add_user(request):
         user = get_user_model().objects.create_user(username=username,
                                                     password=password,
                                                     first_name=firstname,
-                                                    last_name=lastname)
+                                                    last_name=lastname,
+                                                    is_active=False)
         team = request.POST.get("team")
         for t in teams:
             if t.name == team:
