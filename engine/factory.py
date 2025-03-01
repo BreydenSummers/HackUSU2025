@@ -13,6 +13,20 @@ def random_offset():
     return ((random.random() - 0.5) * RANDOMNESS_COEFFICIENT) + 1
 
 
+class Message:
+    def __init__(self, subject, body):
+        self.timestamp = str(datetime.datetime.now())
+        self.subject = subject
+        self.body = body
+
+    def get_dict(self):
+        return {
+            "timestamp" : self.timestamp,
+            "subject" : self.subject,
+            "body" : self.body
+        }
+
+
 class Nerf:
     def __init__(self, id, delay=0, duration=0, effect=1.0):
         self.delay = delay
@@ -64,6 +78,9 @@ class Factory:
         self.attacks = []
 
         self.upgrades = upgrades
+        self.messages = [
+            Message("test", "Testing email.")
+        ]
 
     def update_factory(self):
         time = datetime.datetime.now()                  # Gets the time right now
@@ -110,6 +127,11 @@ class Factory:
             "production" : [upgrade.get_dict() for upgrade in self.upgrades["production"]],
             "defense" : [upgrade.get_dict() for upgrade in self.upgrades["defense"]],
             "offense" : [upgrade.get_dict() for upgrade in self.upgrades["offense"]]
+        })
+    
+    def get_messages_json(self):
+        return json.dumps({
+            "messages" : [message.get_dict() for message in self.messages]
         })
 
 
