@@ -61,7 +61,8 @@ def logout_view(request):
 @user_passes_test(is_player,"home",redirect_field_name=None)
 def index(request):
     """index page view"""
-    return render(request, "simulation/index.html")
+    team = get_team_by_user(request.user)
+    return render(request, "simulation/index.html",{"team":team})
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_player,"home",redirect_field_name=None)
