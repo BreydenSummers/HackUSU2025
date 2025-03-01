@@ -117,11 +117,13 @@ class Factory:
                 subtotal *= (step.get_multiplier() * random_offset())
                 if step.nerf.duration and not step.nerf.attack_id:
                     step.nerf.attack_id = self.simulator.start_attack(attack_map[key], section=key)
+                    print(f"Starting attack {attack_map[key]} on {self.id}.")
                 if step.nerf.delay == 0 and not step.nerf.duration == 0:
                     step.stats = 0
                     if not step.nerf.id in self.attacks: # Attack starts
                         self.attacks.append(step.nerf.id)
                 elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message: # Attack ends
+                    print(f"Stopping attack {step.nerf.attack_id} on {self.id}.")
                     self.simulator.stop_attack(step.nerf.attack_id)
                     self.messages.append(step.nerf.message)
                     step.nerf = Nerf()
