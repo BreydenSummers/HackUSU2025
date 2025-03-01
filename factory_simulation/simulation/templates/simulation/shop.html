@@ -16,7 +16,10 @@ Factory Simulation{% endblock %} {% block content %}
         <p class="text-2xl font-semibold">${{ product.cost }}</p>
       </div>
       <div class="card-actions justify-end mt-4">
-        <button class="btn btn-primary">Purchase</button>
+        <form method="post">
+          {% csrf_token %}
+          <button type="submit" name="purchase" value="{{ product.name }}" class="btn btn-primary">Purchase</button>
+        </form>
       </div>
     </div>
   </div>
@@ -53,7 +56,11 @@ Factory Simulation{% endblock %} {% block content %}
         <p class="text-2xl font-semibold">${{ product.cost }}</p>
       </div>
       <div class="card-actions justify-end mt-4">
-        <button class="btn btn-primary">Purchase</button>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="upgrade" value="{{ product.name }}"/>
+          <button type="submit" name="purchase" class="btn btn-primary">Purchase</button>
+        </form>
       </div>
     </div>
   </div>
@@ -90,7 +97,11 @@ Factory Simulation{% endblock %} {% block content %}
         <p class="text-2xl font-semibold">${{ product.cost }}</p>
       </div>
       <div class="card-actions justify-end mt-4">
-        <button class="btn btn-primary">Purchase</button>
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="upgrade" value="{{ product.name }}"/>
+          <button type="submit" name="purchase" class="btn btn-primary">Purchase</button>
+        </form>
       </div>
     </div>
   </div>
