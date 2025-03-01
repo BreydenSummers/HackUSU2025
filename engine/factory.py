@@ -115,10 +115,11 @@ class Factory:
             for key, step in self.processes.items():    # Iterates through every process and applies the multiplier with a small random coefficient
                 step.stats = 1
                 subtotal *= (step.get_multiplier() * random_offset())
+                if step.nerf.duration and not step.nerf.attack_id:
+                    step.nerf.attack_id = self.simulator.start_attack(attack_map[key], section=key)
                 if step.nerf.delay == 0 and not step.nerf.duration == 0:
                     step.stats = 0
                     if not step.nerf.id in self.attacks: # Attack starts
-                        step.nerf.attack_id = self.simulator.start_attack(attack_map[key], section=key)
                         self.attacks.append(step.nerf.id)
                 elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message: # Attack ends
                     self.simulator.stop_attack(step.nerf.attack_id)
