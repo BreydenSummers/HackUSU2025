@@ -74,7 +74,7 @@ def send_attack():
 
 
 start_time = datetime.datetime.now()
-test_factory = Factory("test", start_time)
+test_factory = Factory("test", start_time, 1000)
 factories = {}
 
 
