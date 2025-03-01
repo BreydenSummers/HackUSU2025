@@ -18,7 +18,8 @@ Factory Simulation{% endblock %} {% block content %}
       <div class="card-actions justify-end mt-4">
         <form method="post">
           {% csrf_token %}
-          <button type="submit" name="purchase" value="{{ product.name }}" class="btn btn-primary">Purchase</button>
+          <input type="hidden" name="category" value="production"/>
+          <button type="submit" name="purchase" value="{{ product.id }}" class="btn btn-primary">Purchase</button>
         </form>
       </div>
     </div>
@@ -58,8 +59,8 @@ Factory Simulation{% endblock %} {% block content %}
       <div class="card-actions justify-end mt-4">
         <form method="post">
           {% csrf_token %}
-          <input type="hidden" name="upgrade" value="{{ product.name }}"/>
-          <button type="submit" name="purchase" class="btn btn-primary">Purchase</button>
+          <input type="hidden" name="category" value="defense"/>
+          <button type="submit" name="purchase" value="{{ product.id }}" class="btn btn-primary">Purchase</button>
         </form>
       </div>
     </div>
@@ -99,8 +100,8 @@ Factory Simulation{% endblock %} {% block content %}
       <div class="card-actions justify-end mt-4">
         <form method="post">
           {% csrf_token %}
-          <input type="hidden" name="upgrade" value="{{ product.name }}"/>
-          <button type="submit" name="purchase" class="btn btn-primary">Purchase</button>
+          <input type="hidden" name="category" value="offense"/>
+          <button type="submit" name="purchase" value="{{ product.id }}" class="btn btn-primary">Purchase</button>
         </form>
       </div>
     </div>

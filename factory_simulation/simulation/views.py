@@ -31,7 +31,6 @@ def login_page(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            print(user)
             if user.is_staff:
                 return redirect("admin_dashboard")
             return redirect("home")
@@ -45,11 +44,12 @@ def logout_view(request):
 @user_passes_test(is_player,"home",redirect_field_name=None)
 def shop(request):
     """Shop page view"""
+    team = get_team_by_user(request.user)
     if request.method == "POST":
         if "purchase" in request.POST:
-            response = requests.get(f"{url}/purchase_upgrade?factory_id=")
+            response = requests.get(f"{url}/purchase_upgrade?team_id={team.name}&category={request.POST['category']}&upgrade_id={request.POST['purchase']}")
     try:
-        response = requests.get(f"{url}/get_upgrades?id=0")
+        response = requests.get(f"{url}/get_upgrades?team_id={team.name}")
         data = json.loads(response.text)
     except Exception:
         data = []
@@ -88,7 +88,10 @@ def create_team(request):
         # Process form data here (you'd use a form in a real app)
         name = request.POST.get("name")
         description = request.POST.get("description")
-
+        try:
+            response = requests.get(f"{url}/add_team?team_id={name}")
+        except Exception as e:
+            print(e)
         team = Team(name=name, description=description, created_by=request.user)
         team.save()
 
