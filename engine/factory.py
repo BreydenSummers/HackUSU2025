@@ -133,9 +133,11 @@ class Factory:
         if self.money < upgrade.cost:
             return False
         if category == "production":
+            self.money -= upgrade.cost
             self.processes[upgrade.process].multiplier = upgrade.effect(self.processes[upgrade.process].multiplier)
             upgrade.cost = int(upgrade.scale(upgrade.cost))
         if category == "defense":
+            self.money -= upgrade.cost
             self.processes[upgrade.process].nerf.duration = 0
             self.processes[upgrade.process].nerf.delay = 0
             upgrade.cost = int(upgrade.cost * 1.5)
