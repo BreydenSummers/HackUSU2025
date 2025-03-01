@@ -50,7 +50,7 @@ def login_page(request):
             login(request, user)
             if user.is_staff:
                 return redirect("admin_dashboard")
-            return redirect("home")
+            return redirect("index")
     return render(request, "simulation/login.html")
 
 def logout_view(request):
