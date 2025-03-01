@@ -6,8 +6,8 @@ from upgrades import upgrades
 import attack
 
 
-UPDATE_INTERVAL = 5
-RANDOMNESS_COEFFICIENT = 0.02
+UPDATE_INTERVAL = 2
+RANDOMNESS_COEFFICIENT = 0.2
 
 
 def random_offset():

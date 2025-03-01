@@ -4,7 +4,16 @@ Arbitrage{% endblock %} {% block content %}
 <div class="hero min-h-[70vh] bg-base-200 rounded-box">
   <div class="hero-content text-center">
     <div class="flex flex-col items-center">
-      <canvas id="chart-canvas" width="1000" height="500" class="border rounded-box w-full max-w-[1000px] bg-gray-100"></canvas>
+
+
+      <div class="border rounded-box w-full h-[50vw] relative">
+        <div id="last-income" class="absolute bottom-0 px-8 py-2 border-t border-r rounded-tr-xl">
+          Last Monthly Income: ...Loading...
+        </div>
+        <canvas id="chart-canvas" width="1000" height="300" class="border rounded-box w-full max-w-[1000px] bg-gray-100"></canvas>
+      </div>
+
+
       <div class="p-4"></div>
       <div class="border rounded-box w-full h-[50vw] relative">
         <div class="absolute px-8 py-2 border-r border-b rounded-br-xl">
@@ -12,7 +21,7 @@ Arbitrage{% endblock %} {% block content %}
           <span class="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full animate-ping [animation-duration:2s]"
             style="animation-duration:2s"></span>
         </div>
-        <canvas id="game-canvas" width="1000" height="1000" class="border rounded-box w-full h-[50vw]"></canvas>
+        <canvas id="game-canvas" width="800" height="400" class="border rounded-box w-full h-[50vw]"></canvas>
       </div>
     </div>
   </div>
@@ -21,6 +30,7 @@ Arbitrage{% endblock %} {% block content %}
 <script>
   let chartCanvas = document.getElementById("chart-canvas");
   let chartContext = chartCanvas.getContext("2d");
+  let lastIncome = document.getElementById("last-income");
   chartContext.imageSmoothingEnabled = false;
 
   let cycleChartData = [];
@@ -34,15 +44,18 @@ Arbitrage{% endblock %} {% block content %}
       ).then((data) => {
         console.log(data);
         cycleChartData.push(data.money);
-        chartContext.clearRect(0,0,chartCanvas.width,chartCanvas.height); 
+        lastIncome.innerHTML = `Last Monthly Income: ${data.money}`;
+        chartContext.clearRect(0,0,chartCanvas.width,chartCanvas.height);
         let i = 50;
         let maxVal = Math.max(...cycleChartData)
         let firstDone = false;
         cycleChartData.forEach((value)=>{
-          yVal = 500 - (400 * value / maxVal);
+          yVal = 250 - (200 * value / maxVal);
           if (!firstDone) {
+            chartContext.beginPath();
             chartContext.moveTo(i,yVal);
             firstDone = true;
+            console.log('end');
           } else {
             chartContext.lineTo(i,yVal);
           }
@@ -51,6 +64,7 @@ Arbitrage{% endblock %} {% block content %}
         })
         
         chartContext.stroke();
+        chartContext.endPath();
       }).catch((error)=> {
         console.log(error);
       }
@@ -59,15 +73,15 @@ Arbitrage{% endblock %} {% block content %}
 
   getCycleChartData();
 
-  setInterval(getCycleChartData, 5000);
+  setInterval(getCycleChartData, 2000);
 
   function resizeChartCanvas() {
     chartCanvas.width = window.innerWidth;
     chartCanvas.height = window.innerWidth / 2;
   }
 
-  window.addEventListener('load', resizeChartCanvas);
-  window.addEventListener('resize', resizeChartCanvas);
+  // window.addEventListener('load', resizeChartCanvas);
+  // window.addEventListener('resize', resizeChartCanvas);
 
 
 </script>
@@ -108,8 +122,8 @@ Arbitrage{% endblock %} {% block content %}
     canvas.height = window.innerWidth / 2;
   }
 
-  window.addEventListener('load', resizeCanvas);
-  window.addEventListener('resize', resizeCanvas);
+  // window.addEventListener('load', resizeCanvas);
+  // window.addEventListener('resize', resizeCanvas);
 
   // converybelt components: factory, component
 
