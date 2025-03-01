@@ -201,7 +201,7 @@ attack_list = {
     ]
 }
 if __name__ == "__main__":
-    test_factory = Factory("test", datetime.datetime.now())
+    test_factory = Factory("test", datetime.datetime.now(), 0000)
     test_factory.attack(2)
  
     while True:
