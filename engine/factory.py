@@ -98,7 +98,9 @@ class Factory:
     
     def get_upgrades_json(self):
         return json.dumps({
-            self
+            "production" : [upgrade.get_dict() for upgrade in self.upgrades["production"]],
+            "defense" : [upgrade.get_dict() for upgrade in self.upgrades["defense"]],
+            "offense" : [upgrade.get_dict() for upgrade in self.upgrades["offense"]]
         })
 
 

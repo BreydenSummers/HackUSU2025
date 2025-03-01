@@ -15,10 +15,10 @@ def get_factory_state():
 
 
 @app.route("/get_upgrades", methods=["GET"])  
-def get_factory_state():
+def get_upgrades():
     factory_id = int(request.args.get("id"))
     factory = factories[factory_id]
-    return factory.get_state_json()
+    return factory.get_upgrades_json()
 
 
 start_time = datetime.datetime.now()

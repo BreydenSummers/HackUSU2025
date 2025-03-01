@@ -25,5 +25,7 @@ upgrades = {
         Upgrade(3, "Packing Space", "Allows you to pack boxes with 10%\ less free space.", 7500, "packing", lambda a : a + ((a-2)/4), lambda a : a + 2500),
         Upgrade(4, "Warehouse Size", "Adds 1000 square feet to your warehouse.", 1000, "warehouse", lambda a : a * 1.02, lambda a : a + 1000),
         Upgrade(5, "Shipping Fleet", "Adds an additional vehicle to your shipping fleet.", 25000, "shipping", lambda a : a + ((a-3)/10), lambda a : a * 1.1),
-    ]
+    ],
+    "defense" : [],
+    "offense" : []
 }
