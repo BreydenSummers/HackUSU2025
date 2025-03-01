@@ -161,8 +161,12 @@ class Factory:
         })
     
     def get_messages_json(self):
+        if self.messages:
+            return json.dumps({
+                "messages" : [message.get_dict() for message in self.messages.copy()]
+            })
         return json.dumps({
-            "messages" : [message.get_dict() for message in self.messages.copy()]
+            "messages" : []
         })
     
     def send_message(self, sender, subject, body):
