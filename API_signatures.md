@@ -118,3 +118,36 @@ GET http://[IP]:5000/send_message?team_id=team_1&sender=admin&subject=SUBJECT&bo
 ```json
 { "success" : true }
 ```
+
+### Get Attacks
+
+#### Call Signature
+```
+GET http://[IP]:5000/get_attacks
+```
+#### Return json Format
+```json
+{
+   "attacks":[
+      {
+         "id":0,
+         "surface":"production"
+      },
+      {
+         "id":1,
+         "surface":"manufacturing"
+      },
+   ]
+}
+```
+
+### Send Attack
+
+#### Call Signature
+```
+GET http://144.39.111.253:5000/send_attack?team_id=team_1&attack_index=0
+```
+#### Return json Format
+```json
+{ "success" : true }
+```
