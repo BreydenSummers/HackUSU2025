@@ -26,7 +26,10 @@ def check_teams():
     try:
         response = requests.get(f"{url}/get_teams")
         flask_teams = json.loads(response.text)
+        flask_teams = flask_teams['teams']
+        print(teams)
         for t in teams:
+            print(t.name)
             if t.name not in flask_teams:
                 try:
                     response = requests.get(f"{url}/add_team?team_id={t.name}")
