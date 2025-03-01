@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Team, Product
 from django.contrib.auth import authenticate, login, logout, get_user_model
+import requests, json
 
+url = "http://127.0.0.1:5000"
 
 def is_admin(user):
     return user.is_staff or user.is_superuser
@@ -37,8 +39,12 @@ def logout_view(request):
 @user_passes_test(is_player,"home",redirect_field_name=None)
 def shop(request):
     """Shop page view"""
-    products = Product.objects.all()
-    return render(request, "simulation/shop.html", {"products": products})
+    try:
+        response = requests.get(f"{url}/get_upgrades?id=0")
+        data = json.loads(response.text)
+    except Exception:
+        data = []
+    return render(request, "simulation/shop.html", {"products": data})
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_player,"home",redirect_field_name=None)
