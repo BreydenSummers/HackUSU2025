@@ -1,18 +1,11 @@
 {% extends 'simulation/base.html' %} {% load static %} {% block title %}Home |
-Factory Simulation{% endblock %} {% block content %}
+Arbitrage{% endblock %} {% block content %}
+<h2 class="text-3xl font-bold">{{ team.name }}</h2>
 <div class="hero min-h-[70vh] bg-base-200 rounded-box">
   <div class="hero-content text-center">
     <div class="flex flex-col items-center">
+<<<<<<< HEAD
 
-      <div class="max-w-md">
-        <h1 class="text-5xl font-bold">Welcome to Factory Simulation</h1>
-        <p class="py-6">This is a simulation platform for factory operations.</p>
-        <p class="pb-6">
-          Get started by exploring the shop or logging in as an admin to create
-          teams.
-        </p>
-        <a href="{% url 'shop' %}" class="btn btn-primary mb-4">Visit Shop</a>
-      </div>
 
       <div class="border rounded-box w-full h-[50vw] relative">
         <div id="last-income" class="absolute bottom-0 px-8 py-2 border-t border-r rounded-tr-xl">
@@ -22,6 +15,9 @@ Factory Simulation{% endblock %} {% block content %}
       </div>
 
 
+=======
+      <canvas id="chart-canvas" width="1000" height="500" class="border rounded-box w-full max-w-[1000px] bg-gray-100"></canvas>
+>>>>>>> main
       <div class="p-4"></div>
       <div class="border rounded-box w-full h-[50vw] relative">
         <div class="absolute px-8 py-2 border-r border-b rounded-br-xl">
