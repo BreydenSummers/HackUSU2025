@@ -15,7 +15,7 @@ def random_offset():
 
 class Message:
     def __init__(self, sender, subject, body):
-        self.timestamp = str(datetime.datetime.now())
+        self.timestamp = str(datetime.datetime.now()).split(".")[0]
         self.sender = sender
         self.subject = subject
         self.body = body
