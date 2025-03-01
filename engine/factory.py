@@ -175,12 +175,12 @@ class Attack:
 
 attack_list = {
     "attacks" : [
-        Attack(0, "purchasing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(1, "manufacturing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(2, "assembly", Nerf(random.randint(10000, 99999), 0, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(3, "packing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(4, "warehouse", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
-        Attack(5, "shipping", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network.")))
+        Attack(0, "purchasing", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(1, "manufacturing", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(2, "assembly", Nerf(random.randint(10000, 99999), 0, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(3, "packing", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(4, "warehouse", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(5, "shipping", Nerf(random.randint(10000, 99999), 3, 999, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network.")))
     ]
 }
 if __name__ == "__main__":
