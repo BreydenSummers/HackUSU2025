@@ -1,0 +1,44 @@
+{% extends 'simulation/base.html' %} {% load static %} {% block title %}Add User
+| Factory Simulation{% endblock %} {% block content %}
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Add a New User</h1>
+  <div class="card bg-base-200 shadow-xl">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">User Name</span>
+          </label>
+          <input type="text" name="username" class="input input-bordered" required/>
+          <label class="label">
+            <span class="label-text">First Name</span>
+          </label>
+          <input type="text" name="firstname" class="input input-bordered" required/>
+          <label class="label">
+            <span class="label-text">Last Name</span>
+          </label>
+          <input type="text" name="lastname" class="input input-bordered" required/>
+          <label class="label">
+            <span class="label-text">Team</span>
+          </label>
+          <select class="input input-bordered" name="team">
+            {% for team in teams %}
+            <option value="{{ team }}">{{ team }}</option>
+            {% endfor %}
+          </select>
+          <label class="label">
+            <span class="label-text">Password</span>
+          </label>
+          <input type="password" name="password" class="input input-bordered" required/>
+        </div>
+        <div class="flex justify-end space-x-2">
+          <a href="{% url 'admin_dashboard' %}" class="btn btn-ghost">Cancel</a>
+          <button type="submit" class="btn btn-primary">Add User</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
