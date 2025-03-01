@@ -173,7 +173,11 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
     <h2 class="card-title text-2xl mb-4">Attacks</h2>
     {% if teams %}
     <div class="overflow-x-auto">
-      <form method="post" action="send-message">
+      <form method="post" action="{% url 'send_attack' %}">
+        {% csrf_token %}
+        <label>
+          Attack:
+        </label>
         <select class="input" name="attack">
           {% for attack in attacks %}
           <option value="{{ attack.id }}">{{ attack.id }}:{{ attack.surface }}</option>
@@ -188,7 +192,7 @@ Dashboard | Factory Simulation{% endblock %} {% block content %}
           <option value="{{ team.name }}">{{ team.name }}</option>
           {% endfor %}
         </select>
-        <button type="submit" class="btn btn-primary">Attack</button>
+        <button type="submit" class="btn btn-primary mx-1">Attack</button>
       </form>
     </div>
     {% else %}

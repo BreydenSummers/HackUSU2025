@@ -134,10 +134,29 @@ def admin_dashboard(request):
     try:
         res = requests.get(f"{url}/get_attacks")
         attacks = json.loads(res.text)
+        attacks = attacks['attacks']
     except Exception as e:
         print(e)
     return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users, "attacks":attacks})
 
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
+def send_attack(request):
+    check_teams()
+    if request.method=="POST":
+        id = request.POST['attack']
+        target = request.POST['target']
+        if target=="all":
+            targets = [t.name for t in Team.objects.all()]
+        else:
+            targets = [target]
+        print(id,targets)
+        for t in targets:
+            try:
+                res = requests.get(f"{url}/send_attack?team_id={t}&attack_index={id}")
+            except Exception as e:
+                print(e)
+    return redirect("admin_dashboard")
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)

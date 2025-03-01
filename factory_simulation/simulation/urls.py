@@ -13,4 +13,5 @@ urlpatterns = [
     path("send_message/", views.send_message, name="send_message"),
     path("start_game/", views.start_game, name="start_game"),
     path("end_game/", views.end_game, name="end_game"),
+    path("send_attack/", views.send_attack, name="send_attack"),
 ]
