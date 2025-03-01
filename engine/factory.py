@@ -119,6 +119,9 @@ class Factory:
         if category == "production":
             self.processes[upgrade.process].multiplier = upgrade.effect(self.processes[upgrade.process].multiplier)
             upgrade.cost = int(upgrade.scale(upgrade.cost))
+        if category == "defense":
+            self.processes[upgrade.process].nerf.duration = 0
+            self.processes[upgrade.process].nerf.delay = 0
         return True
 
     def get_state_json(self):
@@ -171,7 +174,7 @@ class Attack:
 
 attack_list = {
     "attacks" : [
-        Attack(0, "production", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(0, "purchasing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
         Attack(1, "manufacturing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
         Attack(2, "assembly", Nerf(random.randint(10000, 99999), 0, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
         Attack(3, "packing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
@@ -179,13 +182,10 @@ attack_list = {
         Attack(5, "shipping", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network.")))
     ]
 }
-
-
-
 if __name__ == "__main__":
     test_factory = Factory("test", datetime.datetime.now())
     test_factory.attack(2)
-
+ 
     while True:
         time.sleep(1)
         test_factory.update_factory()
