@@ -7,21 +7,29 @@ from factory import Factory
 app = Flask(__name__)
 
 
+@app.route("/add_team", methods=["GET"])
+def add_team():
+    team_name = request.args.get("team_id")
+    if team_name in factories:
+        return json.dumps({ "result" : False })
+    factories[team_name] = Factory(team_name, start_time)
+    return json.dumps({ "result" : True })
+
 @app.route("/get_factory_state", methods=["GET"])  
 def get_factory_state():
-    factory_id = int(request.args.get("id"))
+    factory_id = request.args.get("team_id")
     factory = factories[factory_id]
     return factory.get_state_json()
 
 @app.route("/get_upgrades", methods=["GET"])  
 def get_upgrades():
-    factory_id = int(request.args.get("id"))
+    factory_id = request.args.get("team_id")
     factory = factories[factory_id]
     return factory.get_upgrades_json()
 
 @app.route("/purchase_upgrade", methods=["GET"])  
 def purchase_upgrade():
-    factory_id = int(request.args.get("factory_id"))
+    factory_id = request.args.get("team_id")
     category = request.args.get("category")
     upgrade_id = int(request.args.get("upgrade_id"))
     factory = factories[factory_id]
@@ -30,16 +38,14 @@ def purchase_upgrade():
 
 @app.route("/get_messages", methods=["GET"])
 def get_messages():
-    factory_id = int(request.args.get("id"))
+    factory_id = request.args.get("team_id")
     factory = factories[factory_id]
     return factory.get_messages_json()
 
 
+
 start_time = datetime.datetime.now()
-factories = [
-        Factory("factory_0", start_time),
-        Factory("factory_1", start_time)
-    ]
+factories = {}
 
 
 

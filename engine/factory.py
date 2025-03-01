@@ -79,7 +79,7 @@ class Factory:
 
         self.upgrades = upgrades
         self.messages = [
-            Message("test", "Testing email.")
+            Message("Test Email", "Great job, you learned how to check your email! Make sure you come back here often to check for important updates!")
         ]
 
     def update_factory(self):
