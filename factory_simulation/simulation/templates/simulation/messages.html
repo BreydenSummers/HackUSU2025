@@ -35,6 +35,7 @@ Factory Simulation{% endblock %} {% block content %}
             <h2 class="text-2xl">{{ message.subject }}</h2><hr>
             <h4 class="text-lg">From: {{ message.sender }}</h4>
             <p>{{ message.body }}</p>
+            <p>{{ message.timestamp }}</p>
         </div>
         {% endfor %} {% endif %}
     </div>
@@ -48,7 +49,7 @@ Factory Simulation{% endblock %} {% block content %}
             let id = element.id.split("-")[1];
             console.log(id);
             contents.forEach(c => {
-                c.style.display = "hidden";
+                c.style.display = "none";
             });
             document.getElementById("content-"+id).style.display = "block";
         });

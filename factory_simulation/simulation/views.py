@@ -4,6 +4,7 @@ from django.contrib import messages
 from .models import Team, Product
 from django.contrib.auth import authenticate, login, logout, get_user_model
 import requests, json
+from datetime import datetime
 
 url = "http://127.0.0.1:5000"
 
@@ -78,9 +79,22 @@ def messages_dashboard(request):
     try:
         response = requests.get(f"{url}/get_messages?team_id={team.name}")
         messages = json.loads(response.text)
+        #datetime.strptime(messages['messages'][0]['timestamp'].split(".")[0], '%Y-%m-%d %H:%M:%S')
+        messages['messages'].reverse()
+
     except Exception as e:
         print(e)
     return render(request, "simulation/messages.html", {"emails":messages})
+
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
+def start_game(request):
+    None
+
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
+def end_game(request):
+    None
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
@@ -102,6 +116,22 @@ def admin_dashboard(request):
     users = [u for u in User.objects.all() if not u.is_superuser and not u.is_staff]
     return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users})
 
+
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
+def send_message(request):
+    check_teams()
+    if request.method == "POST":
+        subject = request.POST['subject']
+        body = request.POST['text']
+        recipient = request.POST['recipient']
+        if recipient == "all":
+            recipients = [t.name for t in Team.objects.all()]
+        else:
+            recipients = [recipient]
+        for r in recipients:
+            response = requests.get(f"{url}/send_message?team_id={r}&sender=Admin&subject={subject}&body={body}")
+    return redirect("admin_dashboard")
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
