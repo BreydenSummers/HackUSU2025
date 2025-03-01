@@ -42,6 +42,16 @@ def get_messages():
     factory = factories[factory_id]
     return factory.get_messages_json()
 
+@app.route("/send_message", methods=["GET"])
+def send_message():
+    factory_id = request.args.get("team_id")
+    sender = request.args.get("sender")
+    subject = request.args.get("subject")
+    body = request.args.get("body")
+    factory = factories[factory_id]
+    result = factory.send_message(sender, subject, body)
+    return json.dumps({ "result" : result })
+
 
 
 start_time = datetime.datetime.now()

@@ -14,8 +14,9 @@ def random_offset():
 
 
 class Message:
-    def __init__(self, subject, body):
+    def __init__(self, sender, subject, body):
         self.timestamp = str(datetime.datetime.now())
+        self.sender = sender
         self.subject = subject
         self.body = body
 
@@ -79,7 +80,7 @@ class Factory:
 
         self.upgrades = upgrades
         self.messages = [
-            Message("Test Email", "Great job, you learned how to check your email! Make sure you come back here often to check for important updates!")
+            Message("Admin", "Test Email", "Great job, you learned how to check your email! Make sure you come back here often to check for important updates!")
         ]
 
     def update_factory(self):
@@ -134,6 +135,11 @@ class Factory:
         return json.dumps({
             "messages" : [message.get_dict() for message in self.messages]
         })
+    
+    def send_message(self, sender, subject, body):
+        message = Message(sender, subject, body)
+        self.messages.append(message)
+        return True
 
 
 

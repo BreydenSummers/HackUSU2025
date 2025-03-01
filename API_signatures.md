@@ -83,14 +83,27 @@ GET http://[IP]:5000/get_messages?team_id=team_1
    "messages" : [
       {
          "timestamp":"[DATETIME]",
+         "sender":"[SENDER]",
          "subject":"[SUBJECT]",
          "body":"[BODY]"
       },
       {
          "timestamp":"[DATETIME]",
+         "sender":"[SENDER]",
          "subject":"[SUBJECT]",
          "body":"[BODY]"
       }
    ]
 }
+```
+
+### Get Messages
+
+#### Call Signature
+```
+GET http://[IP]:5000/send_message?team_id=team_1&sender=admin&subject=SUBJECT&body=BODY
+```
+#### Return json Format
+```json
+{ "success" : true }
 ```
