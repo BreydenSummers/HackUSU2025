@@ -2,34 +2,107 @@
 Factory Simulation{% endblock %} {% block content %}
 <div class="hero min-h-[70vh] bg-base-200 rounded-box">
   <div class="hero-content text-center">
-    <div class="max-w-md">
-      <h1 class="text-5xl font-bold">Welcome to Factory Simulation</h1>
-      <p class="py-6">This is a simulation platform for factory operations.</p>
-      <p class="pb-6">
-        Get started by exploring the shop or logging in as an admin to create
-        teams.
-      </p>
-      <a href="{% url 'shop' %}" class="btn btn-primary">Visit Shop</a>
-      <canvas id="game-canvas" width="1000" height="1000" class="border rounded-box w-full">
+    <div class="flex flex-col items-center">
 
-      </canvas>
+      <div class="max-w-md">
+        <h1 class="text-5xl font-bold">Welcome to Factory Simulation</h1>
+        <p class="py-6">This is a simulation platform for factory operations.</p>
+        <p class="pb-6">
+          Get started by exploring the shop or logging in as an admin to create
+          teams.
+        </p>
+        <a href="{% url 'shop' %}" class="btn btn-primary">Visit Shop</a>
+      </div>
+
+      <div class="border rounded-box w-full h-[50vw] relative">
+        <div class="absolute px-8 py-2 border-r border-b rounded-br-xl">
+          Factory Live Cam
+          <span class="absolute top-2 right-2 w-2 h-2 bg-green-400 rounded-full animate-ping [animation-duration:2s]"
+            style="animation-duration:2s"></span>
+        </div>
+        <canvas id="game-canvas" width="1000" height="1000" class="border rounded-box w-full h-[50vw]"></canvas>
+      </div>
     </div>
   </div>
 </div>
 
-<script>
-  // converybelt components: factory, component 
 
-  let factoryImage = new Image();
-  // factoryImage.src = 'data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" stroke="black" fill="red"><path d="m 50 0 l 25 10 l -25 10 l -25 -10 l 25 -10 z m 80 20 l 100 10 l -50 30 l -50 -30 l 20 -10 "/></svg>'
-  factoryImage.src ='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2240%22%20stroke%3D%22black%22%20stroke-width%3D%223%22%20fill%3D%22red%22%20%2F%3E%3C%2Fsvg%3E';
-  // factoryImage.onload = function() {
-  //   console.log(factoryImage.complete === true);
-  // }
-  
-  
-  let beltImage = new Image();
-  beltImage.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KPHBhdGggZD0iTTEwMCw1MEwgNTAwLDEwMCBMIDAsNTAwIFoiIHN0eWxlPSJmaWxsOiBibGVuOyIgLz4KPC9zdmc+Cg==";
+<script>
+  let cycleData = null;
+
+  setInterval(() => {
+    fetch("get-cycle")
+      .then((response) => {
+        return response.json();
+      }
+      ).then((data) => {
+        cycleData = data;
+        console.log(cycleData);
+      }).catch(()=> {
+        console.log('fetch error');
+      }
+      );
+  }, 5000);
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerWidth / 2;
+  }
+
+  window.addEventListener('load', resizeCanvas);
+  window.addEventListener('resize', resizeCanvas);
+
+  // converybelt components: factory, component
+
+  let purchasingAnimation = loadAnimation(
+    [
+      "{% static 'images/purchasing1.svg' %}",
+      "{% static 'images/purchasing2.svg' %}",
+    ]
+  );
+
+  let manufacturingAnimation = loadAnimation(
+    [
+      "{% static 'images/manufacturing1.svg' %}",
+      "{% static 'images/manufacturing2.svg' %}",
+    ]
+  );
+
+  let assemblyAnimation = loadAnimation(
+    [
+      "{% static 'images/assembly1.svg' %}",
+      "{% static 'images/assembly2.svg' %}",
+    ]
+  );
+
+  let packagingAnimation = loadAnimation(
+    [
+      "{% static 'images/packaging1.svg' %}",
+      // "{% static 'images/packaging2.svg' %}",
+      "{% static 'images/packaging3.svg' %}",
+      "{% static 'images/packaging4.svg' %}",
+      // "{% static 'images/packaging5.svg' %}",
+      "{% static 'images/packaging6.svg' %}",
+    ]
+  );
+
+  let warehouseAnimation = loadAnimation(
+    [
+      "{% static 'images/warehouse1.svg' %}",
+      "{% static 'images/warehouse2.svg' %}",
+      "{% static 'images/warehouse3.svg' %}",
+      "{% static 'images/warehouse4.svg' %}",
+    ]
+  );
+
+  let shippingAnimation = loadAnimation(
+    [
+      "{% static 'images/shipping1.svg' %}",
+      "{% static 'images/shipping2.svg' %}",
+      "{% static 'images/shipping3.svg' %}",
+      "{% static 'images/shipping4.svg' %}",
+    ]
+  );
 
   let canvas = document.getElementById("game-canvas");
   let context = canvas.getContext("2d");
@@ -37,8 +110,9 @@ Factory Simulation{% endblock %} {% block content %}
   let endCycleTime = 1000;
   let currCycleTime = 0;
   let prevTime = 0;
+  let framePosition = 0;
 
-  let conveyerBeltPosition = 0;
+  let conveyerBeltPosition = 50;
 
   function animate(timestamp) {
     currCycleTime += timestamp - prevTime;
@@ -54,41 +128,46 @@ Factory Simulation{% endblock %} {% block content %}
     } else {
       currCycleTime = currCycleTime % endCycleTime;
       conveyerBeltPosition = (conveyerBeltPosition + 50) % 100;
+      framePosition++;
     }
     //early return if not usual time from top
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    context.font = "40px Arial";
-    context.fillText("Factory Live Cam",30, 60);
+    // context.font = "40px Arial";
+    // context.fillText("Factory Live Cam", 30, 60);
     drawConveyorBelt(200);
 
     requestAnimationFrame(animate);
   }
-  
+
   animate();
 
   function drawConveyorBelt(y) {
-    drawFactory(y);
-    drawBelt(conveyerBeltPosition, y);
-
+    drawFactory();
   }
 
-  function drawFactory(y) {
-    if (!factoryImage.complete) {
-      return;
-    }
-    context.drawImage(factoryImage, 50, y, 100, 100);
+  function drawFactory() {
+    let i = 50;
+    let step = 120;
+    let size = 80;
+    [purchasingAnimation, manufacturingAnimation, assemblyAnimation, packagingAnimation, warehouseAnimation, shippingAnimation].forEach((animation) => {
+      if (!animation[framePosition % animation.length].complete) {
+        return;
+      }
+      context.drawImage(animation[framePosition % animation.length], i, 200, size, size);
+      i += step;
+    })
   }
 
-  function drawBelt(conveyerBeltPosition, y) {
-    if (!beltImage.complete) {
-      return;
-    }
-
-    for (let i = 100; i <= 700; i += 100) {
-      context.drawImage(beltImage, i + conveyerBeltPosition, y, 100, 100);
-    }
+  function loadAnimation(srcList) {
+    imageList = [];
+    srcList.forEach((src) => {
+      let newImage = new Image();
+      newImage.src = src;
+      imageList.push(newImage);
+    });
+    return imageList;
   }
 
 </script>
