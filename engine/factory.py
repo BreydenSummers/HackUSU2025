@@ -2,6 +2,7 @@ import json
 import datetime
 import random
 import time
+from upgrades import upgrades
 
 
 UPDATE_INTERVAL = 1
@@ -62,6 +63,8 @@ class Factory:
 
         self.attacks = []
 
+        self.upgrades = upgrades
+
     def update_factory(self):
         time = datetime.datetime.now()                  # Gets the time right now
         time_delta = (time - self.start_time).seconds   # Delta time in seconds
@@ -85,8 +88,6 @@ class Factory:
             print(subtotal)
             self.money += subtotal
 
-
-
     def get_state_json(self):
         return json.dumps({
             "id" : self.id,
@@ -95,6 +96,12 @@ class Factory:
             "attacks" : self.attacks
         })
     
+    def get_upgrades_json(self):
+        return json.dumps({
+            self
+        })
+
+
 
 if __name__ == "__main__":
     test_factory = Factory("test", datetime.datetime.now())
