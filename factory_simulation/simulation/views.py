@@ -13,6 +13,12 @@ def is_admin(user):
 def is_player(user):
     return not user.is_staff
 
+def get_team_by_user(user):
+    teams = Team.objects.all()
+    for t in teams:
+        if user in t.members.all():
+            return t
+
 def index(request):
     """index page view"""
     return render(request, "simulation/index.html")
@@ -41,7 +47,7 @@ def shop(request):
     """Shop page view"""
     if request.method == "POST":
         if "purchase" in request.POST:
-            print(request.POST)
+            response = requests.get(f"{url}/purchase_upgrade?factory_id=")
     try:
         response = requests.get(f"{url}/get_upgrades?id=0")
         data = json.loads(response.text)
