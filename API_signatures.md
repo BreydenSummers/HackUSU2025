@@ -4,7 +4,7 @@
 
 ### Add Team
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/add_team?team_id=team_1
 ```
@@ -15,7 +15,7 @@ GET http://[IP]:5000/add_team?team_id=team_1
 
 ### Get Factory State
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/get_factory_state?team_id=team_1
 ```
@@ -38,7 +38,7 @@ GET http://[IP]:5000/get_factory_state?team_id=team_1
 
 ### Get Upgrades
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/get_upgrades?team_id=team_1
 ```
@@ -62,9 +62,9 @@ GET http://[IP]:5000/get_upgrades?team_id=team_1
 
 ### Purchase Upgrade
 
-#### Call Signiture
+#### Call Signature
 ```
-GET http://[IP]:5000/purchase_upgrade?team_id=0&category=production&upgrade_id=team_1
+GET http://[IP]:5000/purchase_upgrade?team_id=team_1&category=production&upgrade_id=0
 ```
 #### Return json Format
 ```json
@@ -73,7 +73,7 @@ GET http://[IP]:5000/purchase_upgrade?team_id=0&category=production&upgrade_id=t
 
 ### Get Messages
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/get_messages?team_id=team_1
 ```

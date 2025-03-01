@@ -104,6 +104,7 @@ class Factory:
                         self.attacks.append(step.nerf.id)
             print(subtotal)
             self.money += subtotal
+            self.money = int(self.money)
 
     def purchase_upgrade(self, category, id):
         upgrade = self.upgrades[category][id]
@@ -111,7 +112,7 @@ class Factory:
             return False
         if category == "production":
             self.processes[upgrade.process].multiplier = upgrade.effect(self.processes[upgrade.process].multiplier)
-            upgrade.cost = upgrade.scale(upgrade.cost)
+            upgrade.cost = int(upgrade.scale(upgrade.cost))
         return True
 
     def get_state_json(self):
