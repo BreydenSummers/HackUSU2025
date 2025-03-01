@@ -6,7 +6,7 @@ from upgrades import upgrades
 from pprint import pprint
 
 
-UPDATE_INTERVAL = 1
+UPDATE_INTERVAL = 5
 RANDOMNESS_COEFFICIENT = 0.02
 
 
