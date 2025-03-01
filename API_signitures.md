@@ -3,7 +3,9 @@
 ## Factory
 
 ### Call Signiture
+```json
 GET http://\[IP\]:5000/get_factory_state?id=1
+```
 
 ### Return json Format
 ```json
