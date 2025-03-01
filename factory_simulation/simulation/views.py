@@ -31,7 +31,7 @@ def check_teams():
         for t in teams:
             if t.name not in flask_teams:
                 try:
-                    response = requests.get(f"{url}/add_team?team_id={t.name}")
+                    response = requests.get(f"{url}/add_team?team_id={t.name}&port={t.port}")
                 except Exception as e:
                     print("Error:",e)
     except Exception as e:
@@ -209,7 +209,7 @@ def create_team(request):
             print(e)
         team = Team(name=name, description=description, created_by=request.user, port=wazuh_port)
         team.save()
-        wazuh_port+=100
+        wazuh_port+=10
 
         messages.success(request, f"Team '{name}' created successfully!")
         return redirect("admin_dashboard")
