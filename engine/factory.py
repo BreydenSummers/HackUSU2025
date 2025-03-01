@@ -126,6 +126,7 @@ class Factory:
         return True
 
     def get_state_json(self):
+        self.update_factory()
         return json.dumps({
             "id" : self.id,
             "money" : int(self.money),
