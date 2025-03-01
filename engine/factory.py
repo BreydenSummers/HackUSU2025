@@ -3,7 +3,6 @@ import datetime
 import random
 import time
 from upgrades import upgrades
-from pprint import pprint
 
 
 UPDATE_INTERVAL = 5
@@ -108,7 +107,7 @@ class Factory:
                         self.attacks.append(step.nerf.id)
                 elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message:
                     self.messages.append(step.nerf.message)
-            print(subtotal)
+                    step.nerf = Nerf()
             self.money += subtotal
             self.money = int(self.money)
 
