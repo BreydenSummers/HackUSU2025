@@ -58,9 +58,22 @@ def send_message():
     result = factory.send_message(sender, subject, body)
     return json.dumps({ "result" : result })
 
+@app.route("/get_attacks", methods=["GET"])
+def get_attacks():
+    return test_factory.get_attacks_json()
+
+@app.route("/send_attack", methods=["GET"])
+def send_attack():
+    factory_id = request.args.get("team_id")
+    index = int(request.args.get("attack_index"))
+    factory = factories[factory_id]
+    result = factory.attack(index)
+    return json.dumps({ "result" : result })
+
 
 
 start_time = datetime.datetime.now()
+test_factory = Factory("test", start_time)
 factories = {}
 
 

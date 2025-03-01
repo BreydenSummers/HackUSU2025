@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from .models import Team, Product
 from django.contrib.auth import authenticate, login, logout, get_user_model
+from django.http import JsonResponse
 import requests, json
-from datetime import datetime
+import os
 
 url = "http://127.0.0.1:5000"
 
@@ -25,6 +26,7 @@ def check_teams():
     try:
         response = requests.get(f"{url}/get_teams")
         flask_teams = json.loads(response.text)
+        flask_teams = flask_teams['teams']
         for t in teams:
             if t.name not in flask_teams:
                 try:
@@ -87,9 +89,40 @@ def messages_dashboard(request):
     return render(request, "simulation/messages.html", {"emails":messages})
 
 @login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_player,"home",redirect_field_name=None)
+def get_cycle(request):
+    check_teams()
+    team = get_team_by_user(request.user)
+    try:
+        res = requests.get(f"{url}/get_factory_state?team_id={team.name}")
+        data = json.loads(res.text)
+        return JsonResponse(data)
+    except Exception as e:
+        print(e)
+    return ""
+
+@login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
 def start_game(request):
-    None
+    check_teams()
+    teams = Team.objects.all()
+    wazuh_port = 5601
+    for t in teams:
+        for u in t.members.all():
+            u.is_active = True
+            u.save()
+
+
+        wazuh_pass = f"tempP@ssw0rd_{t.name}"
+        body = f"""A Wazuh instance has been created for your team.You can access it at: https://localhost:{wazuh_port}.
+        Use the following password: {wazuh_pass}"""
+        headers = {'Content-Type': 'application/json'}
+        res = os.popen("curl -X POST http://localhost:6000/deploy   -H 'Content-Type: application/json' -d '{\"port\":"+str(wazuh_port)+", \"password\": \""+wazuh_pass+"\"}'").read()
+        #res = requests.post(f"http://localhost:6000/deploy",data={"port":wazuh_port,"password":wazuh_pass},headers=headers)
+        res = requests.get(f"{url}/send_message?team_id={t.name}&sender=Admin&subject=Wazuh Access&body={body}")
+        wazuh_port+=1
+    
+    return redirect("admin_dashboard")
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
@@ -114,8 +147,31 @@ def admin_dashboard(request):
     teams = Team.objects.filter(created_by=request.user)
     User = get_user_model()
     users = [u for u in User.objects.all() if not u.is_superuser and not u.is_staff]
-    return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users})
+    try:
+        res = requests.get(f"{url}/get_attacks")
+        attacks = json.loads(res.text)
+        attacks = attacks['attacks']
+    except Exception as e:
+        print(e)
+    return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users, "attacks":attacks})
 
+@login_required(redirect_field_name=None,login_url="login")
+@user_passes_test(is_admin)
+def send_attack(request):
+    check_teams()
+    if request.method=="POST":
+        id = request.POST['attack']
+        target = request.POST['target']
+        if target=="all":
+            targets = [t.name for t in Team.objects.all()]
+        else:
+            targets = [target]
+        for t in targets:
+            try:
+                res = requests.get(f"{url}/send_attack?team_id={t}&attack_index={id}")
+            except Exception as e:
+                print(e)
+    return redirect("admin_dashboard")
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
@@ -167,7 +223,8 @@ def add_user(request):
         user = get_user_model().objects.create_user(username=username,
                                                     password=password,
                                                     first_name=firstname,
-                                                    last_name=lastname)
+                                                    last_name=lastname,
+                                                    is_active=False)
         team = request.POST.get("team")
         for t in teams:
             if t.name == team:
