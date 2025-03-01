@@ -10,9 +10,10 @@ app = Flask(__name__)
 @app.route("/add_team", methods=["GET"])
 def add_team():
     team_name = request.args.get("team_id")
+    port = int(request.args.get("port"))
     if team_name in factories:
         return json.dumps({ "result" : False })
-    factories[team_name] = Factory(team_name, start_time)
+    factories[team_name] = Factory(team_name, start_time, port)
     return json.dumps({ "result" : True })
 
 @app.route("/get_teams", methods=["GET"])
