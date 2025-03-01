@@ -18,6 +18,20 @@ def get_team_by_user(user):
     for t in teams:
         if user in t.members.all():
             return t
+        
+def check_teams():
+    teams = Team.objects.all()
+    try:
+        response = requests.get(f"{url}/get_teams")
+        flask_teams = json.loads(response.text)
+        for t in teams:
+            if t.name not in flask_teams:
+                try:
+                    response = requests.get(f"{url}/add_team?team_id={t.name}")
+                except Exception as e:
+                    print("Error:",e)
+    except Exception as e:
+        print(e)
 
 def index(request):
     """index page view"""
@@ -44,6 +58,7 @@ def logout_view(request):
 @user_passes_test(is_player,"home",redirect_field_name=None)
 def shop(request):
     """Shop page view"""
+    check_teams()
     team = get_team_by_user(request.user)
     if request.method == "POST":
         if "purchase" in request.POST:
@@ -58,12 +73,20 @@ def shop(request):
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_player,"home",redirect_field_name=None)
 def messages_dashboard(request):
-    return render(request, "simulation/messages.html")
+    check_teams()
+    team = get_team_by_user(request.user)
+    try:
+        response = requests.get(f"{url}/get_messages?team_id={team.name}")
+        messages = json.loads(response.text)
+    except Exception as e:
+        print(e)
+    return render(request, "simulation/messages.html", {"emails":messages})
 
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
 def admin_dashboard(request):
     """Admin dashboard view (for non-Django admin)"""
+    check_teams()
     if request.method == "POST":
         try:
             if "team-delete" in request.POST:
@@ -83,6 +106,7 @@ def admin_dashboard(request):
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
 def create_team(request):
+    check_teams()
     """View for admin to create a team"""
     if request.method == "POST":
         # Process form data here (you'd use a form in a real app)
@@ -103,6 +127,7 @@ def create_team(request):
 @login_required(redirect_field_name=None,login_url="login")
 @user_passes_test(is_admin)
 def add_user(request):
+    check_teams()
     teams = Team.objects.filter(created_by=request.user)
     if request.method == "POST":
         username = request.POST.get("username")

@@ -5,6 +5,12 @@ Factory Simulation{% endblock %} {% block content %}
 </div>
 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 items-center" style="height:50vh">
     <div class="col-span-1 bg-base-300 rounded-md h-full p-2">
+        {% if emails.messages %} {% for message in emails.messages %}
+        <div class="p-2 my-1 bg-base-100 rounded-md email" id="mail-{{forloop.counter0}}">
+            <h3 class="text-xl">From: {{ message.sender }}</h3>
+            <p>{{ message.subject }}</p>
+        </div>
+        {% endfor %} {% else %}
         <div class="alert alert-info max-w-md mx-auto my-2">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -21,9 +27,31 @@ Factory Simulation{% endblock %} {% block content %}
             </svg>
             <span>No Messages yet.</span>
         </div>
+        {% endif %}
     </div>
-    <div class="col-span-1 text-center py-10">
-        
+    <div class="col-span-1 text-start bg-base-300 h-full rounded-md p-2">
+        {% if emails.messages %} {% for message in emails.messages %}
+        <div class="p-1 hidden mail-content" id="content-{{forloop.counter0}}">
+            <h2 class="text-2xl">{{ message.subject }}</h2><hr>
+            <h4 class="text-lg">From: {{ message.sender }}</h4>
+            <p>{{ message.body }}</p>
+        </div>
+        {% endfor %} {% endif %}
     </div>
 </div>
+<script defer>
+    const messages = document.querySelectorAll(".email");
+    const contents = document.querySelectorAll(".mail-content");
+
+    messages.forEach(element => {
+        element.addEventListener("click", (e) => {
+            let id = element.id.split("-")[1];
+            console.log(id);
+            contents.forEach(c => {
+                c.style.display = "hidden";
+            });
+            document.getElementById("content-"+id).style.display = "block";
+        });
+    });
+</script>
 {% endblock %}
