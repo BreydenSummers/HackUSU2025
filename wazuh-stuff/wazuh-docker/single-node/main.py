@@ -352,6 +352,6 @@ def deploy_container():
 
 if __name__ == "__main__":
     # Get port from environment or use default
-    api_port = int(os.environ.get("API_PORT", 5000))
+    api_port = int(os.environ.get("API_PORT", 6000))
     logger.info(f"Starting API server on port {api_port}")
     app.run(host="0.0.0.0", port=api_port, debug=False)

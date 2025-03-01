@@ -101,8 +101,8 @@ def start_game(request):
         wazuh_pass = f"tempP@ssw0rd_{t.name}"
         body = f"""A Wazuh instance has been created for your team.You can access it at: https://localhost:{wazuh_port}.
         Use the following password: {wazuh_pass}"""
-
-        #res = requests.post(f"http://localhost:6000/deploy",data={"port":wazuh_port,"password":wazuh_pass})
+        headers = {'Content-Type': 'application/json'}
+        res = requests.post(f"http://localhost:6000/deploy",data={"port":wazuh_port,"password":wazuh_pass},headers=headers)
         res = requests.get(f"{url}/send_message?team_id={t.name}&sender=Admin&subject=Wazuh Access&body={body}")
         wazuh_port+=1
     
@@ -131,7 +131,12 @@ def admin_dashboard(request):
     teams = Team.objects.filter(created_by=request.user)
     User = get_user_model()
     users = [u for u in User.objects.all() if not u.is_superuser and not u.is_staff]
-    return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users})
+    try:
+        res = requests.get(f"{url}/get_attacks")
+        attacks = json.loads(res.text)
+    except Exception as e:
+        print(e)
+    return render(request, "simulation/admin_dashboard.html", {"teams": teams, "players":users, "attacks":attacks})
 
 
 @login_required(redirect_field_name=None,login_url="login")
