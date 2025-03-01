@@ -2,9 +2,11 @@ import json
 import datetime
 import random
 import time
+from upgrades import upgrades
+from pprint import pprint
 
 
-UPDATE_INTERVAL = 1
+UPDATE_INTERVAL = 5
 RANDOMNESS_COEFFICIENT = 0.02
 
 
@@ -12,12 +14,29 @@ def random_offset():
     return ((random.random() - 0.5) * RANDOMNESS_COEFFICIENT) + 1
 
 
+class Message:
+    def __init__(self, sender, subject, body):
+        self.timestamp = str(datetime.datetime.now()).split(".")[0]
+        self.sender = sender
+        self.subject = subject
+        self.body = body
+
+    def get_dict(self):
+        return {
+            "timestamp" : self.timestamp,
+            "sender" : self.sender,
+            "subject" : self.subject,
+            "body" : self.body
+        }
+
+
 class Nerf:
-    def __init__(self, id, delay=0, duration=0, effect=1.0):
+    def __init__(self, id=random.randint(100000, 999999), delay=0, duration=0, effect=1.0, message=None):
         self.delay = delay
         self.duration = duration
         self.effect = effect
         self.id = id
+        self.message = message
 
 
 class Process:
@@ -62,6 +81,11 @@ class Factory:
 
         self.attacks = []
 
+        self.upgrades = upgrades
+        self.messages = [
+            Message("Admin", "Test Email", "Great job, you learned how to check your email! Make sure you come back here often to check for important updates!")
+        ]
+
     def update_factory(self):
         time = datetime.datetime.now()                  # Gets the time right now
         time_delta = (time - self.start_time).seconds   # Delta time in seconds
@@ -82,10 +106,24 @@ class Factory:
                 if step.nerf.delay == 0 and not step.nerf.duration == 0:
                     if not step.nerf.id in self.attacks:
                         self.attacks.append(step.nerf.id)
+                elif step.nerf.delay == 0 and step.nerf.duration == 0 and step.nerf.message:
+                    self.messages.append(step.nerf.message)
             print(subtotal)
             self.money += subtotal
+            self.money = int(self.money)
 
-
+    def purchase_upgrade(self, category, id):
+        upgrade = self.upgrades[category][id]
+        if self.money < upgrade.cost:
+            return False
+        if category == "production":
+            self.processes[upgrade.process].multiplier = upgrade.effect(self.processes[upgrade.process].multiplier)
+            upgrade.cost = int(upgrade.scale(upgrade.cost))
+        if category == "defense":
+            self.processes[upgrade.process].nerf.duration = 0
+            self.processes[upgrade.process].nerf.delay = 0
+            upgrade.cost = int(upgrade.cost * 1.5)
+        return True
 
     def get_state_json(self):
         return json.dumps({
@@ -95,11 +133,61 @@ class Factory:
             "attacks" : self.attacks
         })
     
+    def get_upgrades_json(self):
+        return json.dumps({
+            "production" : [upgrade.get_dict() for upgrade in self.upgrades["production"]],
+            "defense" : [upgrade.get_dict() for upgrade in self.upgrades["defense"]]
+        })
+    
+    def get_messages_json(self):
+        return json.dumps({
+            "messages" : [message.get_dict() for message in self.messages.copy()]
+        })
+    
+    def send_message(self, sender, subject, body):
+        message = Message(sender, subject, body)
+        self.messages.append(message)
+        return True
+    
+    def get_attacks_json(self):
+        return json.dumps({
+            "attacks" : [attack.get_dict() for attack in attack_list["attacks"]]
+        })
 
+    def attack(self, attack_index):
+        attack = attack_list["attacks"][attack_index]
+        self.processes[attack.surface].nerf = attack.nerf
+        return True
+
+
+
+class Attack:
+    def __init__(self, id, surface, nerf):        # factory.Nerf(randint(10000, 99999), 3, 3, 0.5)
+        self.id = id
+        self.surface = surface
+        self.nerf = nerf
+    
+    def get_dict(self):
+        return {
+            "id" : self.id,
+            "surface" : self.surface
+        }
+
+attack_list = {
+    "attacks" : [
+        Attack(0, "purchasing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(1, "manufacturing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(2, "assembly", Nerf(random.randint(10000, 99999), 0, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(3, "packing", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(4, "warehouse", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network."))),
+        Attack(5, "shipping", Nerf(random.randint(10000, 99999), 3, 3, 0.5, Message("Info-Sec", "Threat Detected", "We were able to detect an intrusion on the network.")))
+    ]
+}
 if __name__ == "__main__":
     test_factory = Factory("test", datetime.datetime.now())
-    test_factory.processes["purchasing"].nerf = Nerf(1001, 3, 3, 0.2)
-
-    time.sleep(2)
-    test_factory.update_factory()
-    print(test_factory.get_state_json())
+    test_factory.attack(2)
+ 
+    while True:
+        time.sleep(1)
+        test_factory.update_factory()
+        print(test_factory.get_state_json(), test_factory.get_messages_json())
