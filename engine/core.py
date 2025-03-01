@@ -15,6 +15,12 @@ def add_team():
     factories[team_name] = Factory(team_name, start_time)
     return json.dumps({ "result" : True })
 
+@app.route("/get_teams", methods=["GET"])
+def get_teams():
+    return json.dumps({
+        "teams" : [factories[key].id for key in factories]
+    })
+
 @app.route("/get_factory_state", methods=["GET"])  
 def get_factory_state():
     factory_id = request.args.get("team_id")
@@ -41,6 +47,16 @@ def get_messages():
     factory_id = request.args.get("team_id")
     factory = factories[factory_id]
     return factory.get_messages_json()
+
+@app.route("/send_message", methods=["GET"])
+def send_message():
+    factory_id = request.args.get("team_id")
+    sender = request.args.get("sender")
+    subject = request.args.get("subject")
+    body = request.args.get("body")
+    factory = factories[factory_id]
+    result = factory.send_message(sender, subject, body)
+    return json.dumps({ "result" : result })
 
 
 

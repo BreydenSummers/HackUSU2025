@@ -4,7 +4,7 @@
 
 ### Add Team
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/add_team?team_id=team_1
 ```
@@ -13,9 +13,20 @@ GET http://[IP]:5000/add_team?team_id=team_1
 { "success" : true }
 ```
 
+### Get Teams
+
+#### Call Signature
+```
+GET http://[IP]:5000/get_teams
+```
+#### Return json Format
+```json
+{ "teams" : ["team_1", "team_2"] }
+```
+
 ### Get Factory State
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/get_factory_state?team_id=team_1
 ```
@@ -38,7 +49,7 @@ GET http://[IP]:5000/get_factory_state?team_id=team_1
 
 ### Get Upgrades
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/get_upgrades?team_id=team_1
 ```
@@ -62,9 +73,9 @@ GET http://[IP]:5000/get_upgrades?team_id=team_1
 
 ### Purchase Upgrade
 
-#### Call Signiture
+#### Call Signature
 ```
-GET http://[IP]:5000/purchase_upgrade?team_id=0&category=production&upgrade_id=team_1
+GET http://[IP]:5000/purchase_upgrade?team_id=team_1&category=production&upgrade_id=0
 ```
 #### Return json Format
 ```json
@@ -73,7 +84,7 @@ GET http://[IP]:5000/purchase_upgrade?team_id=0&category=production&upgrade_id=t
 
 ### Get Messages
 
-#### Call Signiture
+#### Call Signature
 ```
 GET http://[IP]:5000/get_messages?team_id=team_1
 ```
@@ -83,14 +94,27 @@ GET http://[IP]:5000/get_messages?team_id=team_1
    "messages" : [
       {
          "timestamp":"[DATETIME]",
+         "sender":"[SENDER]",
          "subject":"[SUBJECT]",
          "body":"[BODY]"
       },
       {
          "timestamp":"[DATETIME]",
+         "sender":"[SENDER]",
          "subject":"[SUBJECT]",
          "body":"[BODY]"
       }
    ]
 }
+```
+
+### Get Messages
+
+#### Call Signature
+```
+GET http://[IP]:5000/send_message?team_id=team_1&sender=admin&subject=SUBJECT&body=BODY
+```
+#### Return json Format
+```json
+{ "success" : true }
 ```
