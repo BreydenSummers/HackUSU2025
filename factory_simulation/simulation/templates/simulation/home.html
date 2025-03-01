@@ -10,7 +10,87 @@ Factory Simulation{% endblock %} {% block content %}
         teams.
       </p>
       <a href="{% url 'shop' %}" class="btn btn-primary">Visit Shop</a>
+      <canvas id="game-canvas" width="1000" height="1000" class="border rounded-box w-full">
+
+      </canvas>
     </div>
   </div>
 </div>
+
+<script>
+  // converybelt components: factory, component 
+
+  let factoryImage = new Image();
+  // factoryImage.src = 'data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" stroke="black" fill="red"><path d="m 50 0 l 25 10 l -25 10 l -25 -10 l 25 -10 z m 80 20 l 100 10 l -50 30 l -50 -30 l 20 -10 "/></svg>'
+  factoryImage.src ='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2240%22%20stroke%3D%22black%22%20stroke-width%3D%223%22%20fill%3D%22red%22%20%2F%3E%3C%2Fsvg%3E';
+  // factoryImage.onload = function() {
+  //   console.log(factoryImage.complete === true);
+  // }
+  
+  
+  let beltImage = new Image();
+  beltImage.src = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KPHBhdGggZD0iTTEwMCw1MEwgNTAwLDEwMCBMIDAsNTAwIFoiIHN0eWxlPSJmaWxsOiBibGVuOyIgLz4KPC9zdmc+Cg==";
+
+  let canvas = document.getElementById("game-canvas");
+  let context = canvas.getContext("2d");
+  context.imageSmoothingEnabled = false;
+  let endCycleTime = 1000;
+  let currCycleTime = 0;
+  let prevTime = 0;
+
+  let conveyerBeltPosition = 0;
+
+  function animate(timestamp) {
+    currCycleTime += timestamp - prevTime;
+    prevTime = timestamp;
+
+    if (!currCycleTime) {
+      currCycleTime = 0;
+    }
+
+    if (currCycleTime < endCycleTime) {
+      requestAnimationFrame(animate);
+      return;
+    } else {
+      currCycleTime = currCycleTime % endCycleTime;
+      conveyerBeltPosition = (conveyerBeltPosition + 50) % 100;
+    }
+    //early return if not usual time from top
+
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    context.font = "40px Arial";
+    context.fillText("Factory Live Cam",30, 60);
+    drawConveyorBelt(200);
+
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+
+  function drawConveyorBelt(y) {
+    drawFactory(y);
+    drawBelt(conveyerBeltPosition, y);
+
+  }
+
+  function drawFactory(y) {
+    if (!factoryImage.complete) {
+      return;
+    }
+    context.drawImage(factoryImage, 50, y, 100, 100);
+  }
+
+  function drawBelt(conveyerBeltPosition, y) {
+    if (!beltImage.complete) {
+      return;
+    }
+
+    for (let i = 100; i <= 700; i += 100) {
+      context.drawImage(beltImage, i + conveyerBeltPosition, y, 100, 100);
+    }
+  }
+
+</script>
+
 {% endblock %}
