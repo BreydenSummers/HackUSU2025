@@ -3,14 +3,15 @@
 ## Factory
 
 ### Call Signiture
-```json
-GET http://\[IP\]:5000/get_factory_state?id=1
+```
+GET http://[IP]:5000/get_factory_state?id=1
 ```
 
 ### Return json Format
 ```json
 {
-   "factory":{
+   "factory_1":{
+      "money":100000,
       "purchase_prices":{
          "square":10,
          "circle":40
