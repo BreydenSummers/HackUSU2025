@@ -1,0 +1,16 @@
+{% extends 'simulation/base.html' %} {% load static %} {% block title %}Home |
+Factory Simulation{% endblock %} {% block content %}
+<div class="hero min-h-[70vh] bg-base-200 rounded-box">
+  <div class="hero-content text-center">
+    <div class="max-w-md">
+      <h1 class="text-5xl font-bold">Welcome to Factory Simulation</h1>
+      <p class="py-6">This is a simulation platform for factory operations.</p>
+      <p class="pb-6">
+        Get started by exploring the shop or logging in as an admin to create
+        teams.
+      </p>
+      <a href="{% url 'shop' %}" class="btn btn-primary">Visit Shop</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

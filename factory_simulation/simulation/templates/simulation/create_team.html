@@ -1,0 +1,42 @@
+{% extends 'simulation/base.html' %} {% load static %} {% block title %}Create
+Team | Factory Simulation{% endblock %} {% block content %}
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-3xl font-bold mb-6">Create a New Team</h1>
+
+  <div class="card bg-base-200 shadow-xl">
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="form-control mb-4">
+          <label class="label">
+            <span class="label-text">Team Name</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            class="input input-bordered"
+            required
+          />
+        </div>
+
+        <div class="form-control mb-6">
+          <label class="label">
+            <span class="label-text">Description</span>
+          </label>
+          <textarea
+            name="description"
+            class="textarea textarea-bordered"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="flex justify-end space-x-2">
+          <a href="{% url 'admin_dashboard' %}" class="btn btn-ghost">Cancel</a>
+          <button type="submit" class="btn btn-primary">Create Team</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
