@@ -2,3 +2,4 @@
 
 # Goals
 * win
+* don't lose
