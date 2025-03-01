@@ -122,6 +122,7 @@ class Factory:
         if category == "defense":
             self.processes[upgrade.process].nerf.duration = 0
             self.processes[upgrade.process].nerf.delay = 0
+            upgrade.cost = int(upgrade.cost * 1.5)
         return True
 
     def get_state_json(self):
