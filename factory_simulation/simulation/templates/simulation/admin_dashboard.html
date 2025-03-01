@@ -1,0 +1,62 @@
+{% extends 'simulation/base.html' %} {% load static %} {% block title %}Admin
+Dashboard | Factory Simulation{% endblock %} {% block content %}
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-3xl font-bold">Admin Dashboard</h1>
+  <a href="{% url 'create_team' %}" class="btn btn-success">Create New Team</a>
+</div>
+
+<div class="card bg-base-200 shadow-xl mb-8">
+  <div class="card-body">
+    <h2 class="card-title text-2xl mb-4">Your Teams</h2>
+
+    {% if teams %}
+    <div class="overflow-x-auto">
+      <table class="table table-zebra w-full">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Members</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for team in teams %}
+          <tr>
+            <td>{{ team.name }}</td>
+            <td>{{ team.description|truncatechars:50 }}</td>
+            <td>{{ team.created_at|date:"M d, Y" }}</td>
+            <td>{{ team.members.count }}</td>
+            <td>
+              <div class="flex space-x-2">
+                <button class="btn btn-sm btn-primary">Edit</button>
+                <button class="btn btn-sm btn-error">Delete</button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        class="stroke-current shrink-0 w-6 h-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+        ></path>
+      </svg>
+      <span>You haven't created any teams yet.</span>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

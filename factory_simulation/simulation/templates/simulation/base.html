@@ -1,0 +1,130 @@
+{% load static %}
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Factory Simulation{% endblock %}</title>
+    <!-- Tailwind CSS and DaisyUI via CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@3.5.0/dist/full.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {},
+        },
+        plugins: [window.DaisyUI],
+        daisyui: {
+          themes: ["light", "dark"],
+        },
+      };
+    </script>
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="min-h-screen bg-base-100 flex flex-col">
+    <!-- Navbar -->
+    <div class="navbar bg-base-300">
+      <div class="navbar-start">
+        <div class="dropdown">
+          <label tabindex="0" class="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />
+            </svg>
+          </label>
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+          >
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'shop' %}">Shop</a></li>
+            {% if user.is_staff or user.is_superuser %}
+            <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <a href="{% url 'home' %}" class="btn btn-ghost normal-case text-xl"
+          >Factory Simulation</a
+        >
+      </div>
+      <div class="navbar-center hidden lg:flex">
+        <ul class="menu menu-horizontal px-1">
+          <li><a href="{% url 'home' %}">Home</a></li>
+          <li><a href="{% url 'shop' %}">Shop</a></li>
+          {% if user.is_staff or user.is_superuser %}
+          <li><a href="{% url 'admin_dashboard' %}">Admin Dashboard</a></li>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="navbar-end">
+        {% if user.is_authenticated %}
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                />
+              </svg>
+            </div>
+          </label>
+          <ul
+            tabindex="0"
+            class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+          >
+            <li class="menu-title">Hello, {{ user.username }}</li>
+            <li><a href="{% url 'admin:logout' %}">Logout</a></li>
+          </ul>
+        </div>
+        {% else %}
+        <a href="{% url 'admin:login' %}" class="btn btn-primary">Login</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8 flex-grow">
+      {% if messages %}
+      <div class="toast toast-top toast-end">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+          <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %}{% endblock %}
+    </div>
+
+    <footer class="footer footer-center p-4 bg-base-300 text-base-content">
+      <div>
+        <p>© {% now "Y" %} Factory Simulation. All rights reserved.</p>
+      </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>
