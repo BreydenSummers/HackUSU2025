@@ -27,12 +27,12 @@ upgrades = {
         Upgrade(5, "Shipping Fleet", "Adds an additional vehicle to your shipping fleet.", 25000, "shipping", lambda a : a + ((a-3)/10), lambda a : a * 1.1),
     ],
     "defense" : [
-        Upgrade(0, "Password Policy", "Protects against phishing attempts.", 25000, "purchasing", 1, lambda a : a * 1.5),
-        Upgrade(0, "Network Segmentation", "Seperates vulnerable equipment from compromised networks.", 25000, "manufacturing", 1, lambda a : a * 1.5),
-        Upgrade(0, "System Hardening", "Decreases attack surface by disabling non-esential services.", 25000, "assembly", 1, lambda a : a * 1.5),
-        Upgrade(0, "Access Control", "Prevents users from accessing unnecesary resources.", 25000, "packing", 1, lambda a : a * 1.5),
-        Upgrade(0, "Firewall", "Only allows certain services to be accesed through the internet.", 25000, "warehouse", 1, lambda a : a * 1.5),
-        Upgrade(0, "Hardware Upgrades", "Protects against zero-day vulnerabilities.", 25000, "shipping", 1, lambda a : a * 1.5)
+        Upgrade(0, "Password Policy", "Protects against phishing attempts.", 5000, "purchasing", 1, lambda a : a * 1.5),
+        Upgrade(1, "Network Segmentation", "Seperates vulnerable equipment from compromised networks.", 5000, "manufacturing", 1, lambda a : a * 1.5),
+        Upgrade(2, "System Hardening", "Decreases attack surface by disabling non-esential services.", 5000, "assembly", 1, lambda a : a * 1.5),
+        Upgrade(3, "Access Control", "Prevents users from accessing unnecesary resources.", 5000, "packing", 1, lambda a : a * 1.5),
+        Upgrade(4, "Firewall", "Only allows certain services to be accesed through the internet.", 5000, "warehouse", 1, lambda a : a * 1.5),
+        Upgrade(5, "Hardware Upgrades", "Protects against zero-day vulnerabilities.", 5000, "shipping", 1, lambda a : a * 1.5)
     ]
 }
 
