@@ -4,42 +4,22 @@
 
 ### Call Signiture
 ```
-GET http://[IP]:5000/get_factory_state?id=1
+GET http://[IP]:5000/get_factory_state?id=0
 ```
 
 ### Return json Format
 ```json
 {
-   "factory_1":{
-      "money":100000,
-      "purchase_prices":{
-         "square":10,
-         "circle":40
-      },
-      "sales_prices":{
-         "square":18,
-         "circle":75
-      },
-      "machines":{
-         "machine_1":{
-            "enabled":true,
-            "operational_cost":8500,
-            "product":"square",
-            "speed":1500
-         },
-         "machine_2":{
-            "enabled":true,
-            "operational_cost":4000,
-            "product":"circle",
-            "speed":600
-         },
-         "machine_3":{
-            "enabled":false,
-            "operational_cost":0,
-            "product":"square",
-            "speed":0
-         }
-      }
-   }
+   "id":"factory_0",
+   "money":100000,
+   "processes":{
+      "purchasing":"1.0",
+      "manufacturing":"1.0",
+      "assembly":"1.0",
+      "packing":"1.0",
+      "warehouse":"1.0",
+      "shipping":"1.0"
+   },
+   "attacks":[]
 }
 ```
